@@ -1,7 +1,6 @@
 CmdOption
-
-LICENSE UNDER MIT LICENSE
 =========
+LICENSE UNDER MIT LICENSE
 
 命令函数绑定器
 
