@@ -1,0 +1,2 @@
+C:/MinGW/bin/ar.exe cr ../../lib/libcmdoption.a  CMakeFiles/cmdoption.dir/CmdOptionList.cpp.obj CMakeFiles/cmdoption.dir/CmdOptionValue.cpp.obj
+C:/MinGW/bin/ranlib.exe ../../lib/libcmdoption.a
