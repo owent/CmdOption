@@ -9,9 +9,9 @@
  * CmdOptionBindTBase.h
  *
  *  Created on: 2012-01-18
- *      Author: owentou(Å·ÎÄèº)
+ *      Author: owentou(æ¬§æ–‡éŸ¬)
  *
- * °ó¶¨Æ÷»ùÀà¼°¹«¹²¶¨Òå
+ * ç»‘å®šå™¨åŸºç±»åŠå…¬å…±å®šä¹‰
  */
 
 #include <string>
@@ -20,42 +20,42 @@
 
 namespace copt
 {
-    // ±ê×¼Ö¸Áî´¦Àíº¯Êı²ÎÊıÀàĞÍ
+    // æ ‡å‡†æŒ‡ä»¤å¤„ç†å‡½æ•°å‚æ•°ç±»å‹
     typedef CmdOptionList& callback_param;
-    // ±ê×¼Ö¸Áî´¦Àíº¯Êı(ÎŞ·µ»ØÖµ£¬²ÎÊıÎªÑ¡ÏîµÄÓ³Éä±í)
-    // void function_name (CmdOptionList&, [²ÎÊı]); // º¯Êı²ÎÊı¿ÉÑ¡
-    // void function_name (callback_param, [²ÎÊı]); // º¯Êı²ÎÊı¿ÉÑ¡
+    // æ ‡å‡†æŒ‡ä»¤å¤„ç†å‡½æ•°(æ— è¿”å›å€¼ï¼Œå‚æ•°ä¸ºé€‰é¡¹çš„æ˜ å°„è¡¨)
+    // void function_name (CmdOptionList&, [å‚æ•°]); // å‡½æ•°å‚æ•°å¯é€‰
+    // void function_name (callback_param, [å‚æ•°]); // å‡½æ•°å‚æ•°å¯é€‰
 
-    // °ó¶¨Æ÷¼¯ºÏ
+    // ç»‘å®šå™¨é›†åˆ
     namespace binder {
         struct unspecified {};
 
-        // °ó¶¨Æ÷½Ó¿Ú
+        // ç»‘å®šå™¨æ¥å£
         class CmdOptionBindBase: public std::enable_shared_from_this<CmdOptionBindBase>
         {
         protected:
             std::string m_strHelpMsg;
             virtual ~CmdOptionBindBase(){}
         public:
-            // ¶¨Òå²ÎÊıÀàĞÍ
+            // å®šä¹‰å‚æ•°ç±»å‹
             typedef callback_param param_type;
 
             virtual void operator()(callback_param arg) = 0;
 
-            // »ñÈ¡°ó¶¨Æ÷µÄ°ïÖúĞÅÏ¢
+            // è·å–ç»‘å®šå™¨çš„å¸®åŠ©ä¿¡æ¯
             virtual std::string GetHelpMsg(const char* strPre = "")
             {
                 return strPre + m_strHelpMsg;
             }
 
-            // ÉèÖÃ°ó¶¨Æ÷µÄ°ïÖúĞÅÏ¢
+            // è®¾ç½®ç»‘å®šå™¨çš„å¸®åŠ©ä¿¡æ¯
             virtual std::shared_ptr<CmdOptionBindBase> SetHelpMsg(const char* strHelp)
             {
                 m_strHelpMsg = strHelp;
                 return shared_from_this();
             }
 
-            // Ôö¼Ó°ó¶¨Æ÷µÄ°ïÖúĞÅÏ¢
+            // å¢åŠ ç»‘å®šå™¨çš„å¸®åŠ©ä¿¡æ¯
             virtual std::shared_ptr<CmdOptionBindBase> AddHelpMsg(const char* strHelp)
             {
                 m_strHelpMsg += strHelp;
@@ -63,18 +63,18 @@ namespace copt
             }
         };
 
-        // º¯Êı¡¢º¯Êı½á¹¹°ó¶¨Æ÷
-        template<class _R, class _F, class _L> 
+        // å‡½æ•°ã€å‡½æ•°ç»“æ„ç»‘å®šå™¨
+        template<class _R, class _F, class _PL> 
         class CmdOptionBindT : public CmdOptionBindBase
         {
         protected:
-            _F m_fFuncObj;      // º¯Êı½á¹¹
-            _L m_stParamList;   // ²ÎÊıÁĞ±í½á¹¹
+            _F m_fFuncObj;      // å‡½æ•°ç»“æ„
+            _PL m_stParamList;   // å‚æ•°åˆ—è¡¨ç»“æ„
 
         public:
             typedef CmdOptionBindT this_type;
 
-            CmdOptionBindT(_F f, _L l): m_fFuncObj(f), m_stParamList(l) {}
+            CmdOptionBindT(_F f, _PL l): m_fFuncObj(f), m_stParamList(l) {}
 
             void operator()(callback_param args)
             {
