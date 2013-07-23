@@ -9,7 +9,7 @@
  * CmdOptionBindT_CC.h
  *
  *  Created on: 2012-01-18
- *      Author: owentou(欧文韬)
+ *      Author: OWenT
  *
  * 自由函数绑定器
  */

@@ -2,7 +2,7 @@
 * CmdOptionList.cpp
 *
 *  Created on: 2011-12-29
-*      Author: owentou(欧文韬)
+*      Author: OWenT
 *
 * 应用程序命令处理
 *
@@ -58,6 +58,27 @@ namespace copt
     {
         m_pKeyValue.reset();    // 删除key-value映射
         m_stKeys.clear();       // 删除索引下标映射
+        m_stCmdArray.clear();   // 删除指令栈集合
+    }
+
+    void CmdOptionList::LoadCmdArray(const cmd_array_type& stCmds)
+    {
+        m_stCmdArray = stCmds;
+    }
+
+    void CmdOptionList::AppendCmd(const char* strCmd, std::shared_ptr<binder::CmdOptionBindBase> stBase)
+    {
+        m_stCmdArray.push_back(std::make_pair(strCmd, stBase));
+    }
+
+    void CmdOptionList::PopCmd()
+    {
+        m_stCmdArray.pop_back();
+    }
+
+    const CmdOptionList::cmd_array_type& CmdOptionList::GetCmdArray() const
+    {
+        return m_stCmdArray;
     }
 
     CmdOptionList::value_type CmdOptionList::Get(std::string strKey, const char* strDefault)

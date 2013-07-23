@@ -5,12 +5,13 @@
 # pragma once
 #endif
 
-/*
+/**
  * CmdOptionBind<TCmdStr>.h
  * 
- *  Version: 1.3.1
+ *  Version: 1.3.2
  *  Created on: 2011-12-29
- *      Author: owentou(欧文韬)
+ *  Last edit : 2013-07-23
+ *      Author: OWenT
  *
  * 应用程序命令处理
  * 绑定规则和C++ 11不同，C++ 11的类成员绑定是复制类，而这里是引用
@@ -18,6 +19,7 @@
  *      并且数值的复制在执行BindCmd时，如果需要引用需要显式指定函数类型
  *      注意默认推导不支持隐式转换(即对double和int是默认推导，但float、short、long等需要指明参数类型)
  *      为了更高效，所有返回值均为PDO类型和指针/智能指针
+ *
  */
 
 #include <exception>
@@ -48,7 +50,6 @@ namespace copt
      * 命令处理函数
      * 内定命令/变量列表(用于处理内部事件):
      *      @OnError    :  出错时触发
-     *          @Cmd        : @OnError 函数的命令名称
      *          @ErrorMsg   : @OnError 函数的错误名称
      *
      *      @OnDefault  :  默认执行函数(用于执行批量命令时的第一个指令前的参数)
@@ -75,6 +76,7 @@ namespace copt
         void runCmd(const TCmdStr& strCmd, callback_param stParams) const
         {
             typename funmap_type::const_iterator stIter = m_stCallbackFuns.find(strCmd);
+
             if (stIter == m_stCallbackFuns.end())
             {
                 // 内定命令不报“找不到指令”错
@@ -88,10 +90,7 @@ namespace copt
                     if (stParams.GetParamsNumber() % 2)
                         stParams.Add("");
 
-                    // 错误附加内容(命令名称)
-                    stParams.Add("@Cmd");
-                    stParams.Add(strCmd.c_str());
-
+                    stParams.AppendCmd(strCmd.c_str(), std::shared_ptr<binder::CmdOptionBindBase>());
                     // 错误附加内容(错误内容)
                     stParams.Add("@ErrorMsg");
                     stParams.Add("Command Invalid");
@@ -99,6 +98,7 @@ namespace copt
                 }
                 return;
             }
+            stParams.AppendCmd(strCmd.c_str(), stIter->second);
             (*stIter->second)(stParams);
         }
 
@@ -254,24 +254,45 @@ namespace copt
         /**
          * 处理已分离指令(使用CmdOptionList存储参数集)
          * @param stArgs 数据集合
+         * @param bSingleCmd 是否强制单指令, 如果不强制, 则指令名称不能重复
          */
-        void Start(callback_param stArgs) const
+        void Start(callback_param stArgs, bool bSingleCmd = false) const
         {
             int argv = stArgs.GetParamsNumber();
             CmdOptionList stCmdArgs;
-            TCmdStr strCmd = "@OnDefault";
+            TCmdStr strCmd = bSingleCmd? "@OnError": "@OnDefault";
             for (int i = -1; i < argv; )
             {
                 ++ i;
                 stCmdArgs.Clear();
+                stCmdArgs.LoadCmdArray(stArgs.GetCmdArray());
 
                 for (; i < argv; ++ i)
                 {
                     // 把所有的非指令字符串设为指令参数
                     if (m_stCallbackFuns.find(stArgs[i]->AsString()) == m_stCallbackFuns.end())
+                    {
                         stCmdArgs.Add(stArgs[i]->AsString());
+                    }
                     else
+                    {
+                        // 如果是单指令且有未知参数则分发@OnError错误处理
+                        if (bSingleCmd && stCmdArgs.GetParamsNumber() > 0)
+                        {
+                            runCmd(strCmd, stCmdArgs);
+                            stCmdArgs.Clear();
+                            stCmdArgs.LoadCmdArray(stArgs.GetCmdArray());
+                        }
+
+                        // 追加所有参数，执行单指令
+                        if (bSingleCmd)
+                        {
+                            strCmd = TCmdStr(stArgs[i]->AsCppString().c_str(), stArgs[i]->AsCppString().size());
+                            for(++ i; i < argv; ++ i)
+                                stCmdArgs.Add(stArgs[i]->AsString());
+                        }
                         break;
+                    }
                 }
 
                 runCmd(strCmd, stCmdArgs);
@@ -285,28 +306,31 @@ namespace copt
          * 处理已分离指令(使用char**存储参数集)
          * @param argv 参数个数
          * @param argc 参数列表
+         * @param bSingleCmd 是否强制单指令, 如果不强制, 则指令名称不能重复
          */
-        inline void Start(int argv, const char* argc[]) const
+        inline void Start(int argv, const char* argc[], bool bSingleCmd = false) const
         {
             CmdOptionList stList(argv, argc);
-            Start(stList);
+            Start(stList, bSingleCmd);
         }
 
         /**
          * 处理已分离指令(使用std::vector<std::string>存储参数集)
          * @param stCmds 数据集合
+         * @param bSingleCmd 是否强制单指令, 如果不强制, 则指令名称不能重复
          */
-        inline void Start(const std::vector<std::string>& stCmds) const
+        inline void Start(const std::vector<std::string>& stCmds, bool bSingleCmd = false) const
         {
             CmdOptionList stList(stCmds);
-            Start(stList);
+            Start(stList, bSingleCmd);
         }
         
         /**
          * 处理未分离指令(使用const char*存储参数集字符串)
          * @param strCmd 指令
+         * @param bSingleCmd 是否强制单指令, 如果不强制, 则指令名称不能重复
          */
-        void Start(const char* strCmd) const
+        void Start(const char* strCmd, bool bSingleCmd = false) const
         {
             CmdOptionList stCmds;
             std::string strSeg;
@@ -318,16 +342,17 @@ namespace copt
                 stCmds.Add(strSeg.c_str());
             }
         
-            Start(stCmds);
+            Start(stCmds, bSingleCmd);
         }
 
         /**
          * 处理未分离指令(使用const std::string&存储参数集字符串)
          * @param strCmd 指令
+         * @param bSingleCmd 是否强制单指令, 如果不强制, 则指令名称不能重复
          */
-        inline void Start(const std::string& strCmd) const
+        inline void Start(const std::string& strCmd, bool bSingleCmd = false) const
         {
-            Start(strCmd.c_str());
+            Start(strCmd.c_str(), bSingleCmd);
         }
 
         /**
@@ -368,8 +393,8 @@ namespace copt
             if (iter != m_stCallbackFuns.end())
                 (*iter->second)(arg);
         
-            // 重新执行指令集
-            Start(arg);
+            // 重新执行指令集, 进入子结构的一定是单指令
+            Start(arg, true);
         }
 
         /**
@@ -387,12 +412,16 @@ namespace copt
                 if (stSet.find(iter->second) != stSet.end())
                     continue;
 
+                // 跳过内置命令
+                if ('@' == *iter->first.c_str())
+                    continue;
+
                 stSet.insert(iter->second);
                 std::string strCmdHelp = iter->second->GetHelpMsg((strPre + m_strHelpMsg).c_str());
 
                 if (strCmdHelp.size() > 0)
                 {
-                    if (iter != m_stCallbackFuns.begin())
+                    if (strHelpMsg.size() > 0 && '\n' != *strHelpMsg.rbegin())
                         strHelpMsg += "\r\n"; 
                     strHelpMsg += strCmdHelp;
                 }

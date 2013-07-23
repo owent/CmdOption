@@ -1,8 +1,8 @@
 /*
 * CmdOptionValue.cpp
 *
-*  Created on: 2011-12-29(欧文韬)
-*      Author: owentou
+*  Created on: 2011-12-29
+*      Author: OWenT
 *
 * 应用程序命令处理
 *

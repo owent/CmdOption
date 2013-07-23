@@ -1,2 +1,0 @@
-D:/SysData/Documents/GitHub/CmdOption/build/CMakeFiles/CmdOptionTest.dir
-D:/SysData/Documents/GitHub/CmdOption/build/src/CMakeFiles/cmdoption.dir

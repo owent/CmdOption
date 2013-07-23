@@ -9,67 +9,30 @@
  * CmdOptionBindTBase.h
  *
  *  Created on: 2012-01-18
- *      Author: owentou(æ¬§æ–‡éŸ¬)
+ *      Author: OWenT
  *
- * ç»‘å®šå™¨åŸºç±»åŠå…¬å…±å®šä¹‰
+ * °ó¶¨Æ÷»ùÀà¼°¹«¹²¶¨Òå
  */
-
-#include <string>
 
 #include "CmdOptionList.h"
 
 namespace copt
 {
-    // æ ‡å‡†æŒ‡ä»¤å¤„ç†å‡½æ•°å‚æ•°ç±»å‹
-    typedef CmdOptionList& callback_param;
-    // æ ‡å‡†æŒ‡ä»¤å¤„ç†å‡½æ•°(æ— è¿”å›å€¼ï¼Œå‚æ•°ä¸ºé€‰é¡¹çš„æ˜ å°„è¡¨)
-    // void function_name (CmdOptionList&, [å‚æ•°]); // å‡½æ•°å‚æ•°å¯é€‰
-    // void function_name (callback_param, [å‚æ•°]); // å‡½æ•°å‚æ•°å¯é€‰
+    // ±ê×¼Ö¸Áî´¦Àíº¯Êı²ÎÊıÀàĞÍ
+    
+    // ±ê×¼Ö¸Áî´¦Àíº¯Êı(ÎŞ·µ»ØÖµ£¬²ÎÊıÎªÑ¡ÏîµÄÓ³Éä±í)
+    // void function_name (CmdOptionList&, [²ÎÊı]); // º¯Êı²ÎÊı¿ÉÑ¡
+    // void function_name (callback_param, [²ÎÊı]); // º¯Êı²ÎÊı¿ÉÑ¡
 
-    // ç»‘å®šå™¨é›†åˆ
+    // °ó¶¨Æ÷¼¯ºÏ
     namespace binder {
-        struct unspecified {};
-
-        // ç»‘å®šå™¨æ¥å£
-        class CmdOptionBindBase: public std::enable_shared_from_this<CmdOptionBindBase>
-        {
-        protected:
-            std::string m_strHelpMsg;
-            virtual ~CmdOptionBindBase(){}
-        public:
-            // å®šä¹‰å‚æ•°ç±»å‹
-            typedef callback_param param_type;
-
-            virtual void operator()(callback_param arg) = 0;
-
-            // è·å–ç»‘å®šå™¨çš„å¸®åŠ©ä¿¡æ¯
-            virtual std::string GetHelpMsg(const char* strPre = "")
-            {
-                return strPre + m_strHelpMsg;
-            }
-
-            // è®¾ç½®ç»‘å®šå™¨çš„å¸®åŠ©ä¿¡æ¯
-            virtual std::shared_ptr<CmdOptionBindBase> SetHelpMsg(const char* strHelp)
-            {
-                m_strHelpMsg = strHelp;
-                return shared_from_this();
-            }
-
-            // å¢åŠ ç»‘å®šå™¨çš„å¸®åŠ©ä¿¡æ¯
-            virtual std::shared_ptr<CmdOptionBindBase> AddHelpMsg(const char* strHelp)
-            {
-                m_strHelpMsg += strHelp;
-                return shared_from_this();
-            }
-        };
-
-        // å‡½æ•°ã€å‡½æ•°ç»“æ„ç»‘å®šå™¨
+        // º¯Êı¡¢º¯Êı½á¹¹°ó¶¨Æ÷
         template<class _R, class _F, class _PL> 
         class CmdOptionBindT : public CmdOptionBindBase
         {
         protected:
-            _F m_fFuncObj;      // å‡½æ•°ç»“æ„
-            _PL m_stParamList;   // å‚æ•°åˆ—è¡¨ç»“æ„
+            _F m_fFuncObj;      // º¯Êı½á¹¹
+            _PL m_stParamList;   // ²ÎÊıÁĞ±í½á¹¹
 
         public:
             typedef CmdOptionBindT this_type;

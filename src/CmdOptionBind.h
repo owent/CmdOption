@@ -9,7 +9,7 @@
  * CmdOptionBind.h
  *
  *  Created on: 2011-12-29
- *      Author: owentou(欧文韬)
+ *      Author: OWenT
  *
  * 应用程序命令处理
  * 绑定器模板（处理所有绑定的函数和类成员函数）
