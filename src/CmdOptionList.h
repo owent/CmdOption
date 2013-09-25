@@ -11,7 +11,7 @@
  *  Created on: 2011-12-29
  *      Author: OWenT
  *
- * Ó¦ÓÃ³ÌĞòÃüÁî´¦Àí
+ * åº”ç”¨ç¨‹åºå‘½ä»¤å¤„ç†
  *
  */
 
@@ -31,32 +31,32 @@ namespace copt
     {
         struct unspecified {};
 
-        // °ó¶¨Æ÷½Ó¿Ú
+        // ç»‘å®šå™¨æ¥å£
         class CmdOptionBindBase: public std::enable_shared_from_this<CmdOptionBindBase>
         {
         protected:
             std::string m_strHelpMsg;
             virtual ~CmdOptionBindBase(){}
         public:
-            // ¶¨Òå²ÎÊıÀàĞÍ
+            // å®šä¹‰å‚æ•°ç±»å‹
             typedef callback_param param_type;
 
             virtual void operator()(callback_param arg) = 0;
 
-            // »ñÈ¡°ó¶¨Æ÷µÄ°ïÖúĞÅÏ¢
+            // è·å–ç»‘å®šå™¨çš„å¸®åŠ©ä¿¡æ¯
             virtual std::string GetHelpMsg(const char* strPre = "")
             {
                 return strPre + m_strHelpMsg;
             }
 
-            // ÉèÖÃ°ó¶¨Æ÷µÄ°ïÖúĞÅÏ¢
+            // è®¾ç½®ç»‘å®šå™¨çš„å¸®åŠ©ä¿¡æ¯
             virtual std::shared_ptr<CmdOptionBindBase> SetHelpMsg(const char* strHelp)
             {
                 m_strHelpMsg = strHelp;
                 return shared_from_this();
             }
 
-            // Ôö¼Ó°ó¶¨Æ÷µÄ°ïÖúĞÅÏ¢
+            // å¢åŠ ç»‘å®šå™¨çš„å¸®åŠ©ä¿¡æ¯
             virtual std::shared_ptr<CmdOptionBindBase> AddHelpMsg(const char* strHelp)
             {
                 m_strHelpMsg += strHelp;
@@ -69,64 +69,71 @@ namespace copt
     class CmdOptionList
     {
     public:
-        // ÀàĞÍ¶¨Òå
-        typedef std::vector< std::pair<std::string, std::shared_ptr<binder::CmdOptionBindBase> > > cmd_array_type;   // ´óĞ¡ÀàĞÍ
-        typedef std::shared_ptr<CmdOptionValue> value_type;     // ÖµÀàĞÍ
-        typedef std::vector<value_type>::size_type size_type;   // ´óĞ¡ÀàĞÍ
+        // ç±»å‹å®šä¹‰
+        typedef std::vector< std::pair<std::string, std::shared_ptr<binder::CmdOptionBindBase> > > cmd_array_type;   // å¤§å°ç±»å‹
+        typedef std::shared_ptr<CmdOptionValue> value_type;     // å€¼ç±»å‹
+        typedef std::vector<value_type>::size_type size_type;   // å¤§å°ç±»å‹
 
     protected:
         
         std::shared_ptr<std::map<std::string, std::shared_ptr<CmdOptionValue> > > m_pKeyValue;
         std::vector<std::shared_ptr<CmdOptionValue> > m_stKeys;
         cmd_array_type m_stCmdArray;
+        void* m_pExtParam;
 
-        // ³õÊ¼»¯Key-ValueÓ³Éä£¨ÓÃÓÚµÚÒ»´Îµ÷ÓÃGet(key)Ê±µ÷ÓÃ£©
+        // åˆå§‹åŒ–Key-Valueæ˜ å°„ï¼ˆç”¨äºç¬¬ä¸€æ¬¡è°ƒç”¨Get(key)æ—¶è°ƒç”¨ï¼‰
         void initKeyValueMap();
 
     public:
 
-        // ¹¹Ôìº¯Êı
+        // æ„é€ å‡½æ•°
         CmdOptionList();
         CmdOptionList(int argv, const char* argc[]);
         CmdOptionList(const std::vector<std::string>& stCmds);
 
-        // Ôö¼ÓÑ¡Ïî
+        // å¢åŠ é€‰é¡¹
         void Add(const char* strParam);
 
-        // É¾³ıÈ«²¿Ñ¡Ïî
+        // åˆ é™¤å…¨éƒ¨é€‰é¡¹
         void Clear();
 
-        // ¶ÁÈ¡Ö¸Áî¼¯
+        // è¯»å–æŒ‡ä»¤é›†
         void LoadCmdArray(const cmd_array_type& stCmds);
 
-        // Ìí¼ÓÖ¸Áî
+        // æ·»åŠ æŒ‡ä»¤
         void AppendCmd(const char* strCmd, std::shared_ptr<binder::CmdOptionBindBase> stBase);
 
-        // ÒÆ³ıÄ©Î²Ö¸Áî
+        // ç§»é™¤æœ«å°¾æŒ‡ä»¤
         void PopCmd();
 
         const cmd_array_type& GetCmdArray() const;
 
-        // ¸ù¾İ¼üÖµ»ñÈ¡Ñ¡ÏîÖ¸Õë£¬Èç¹û²»´æÔÚ·µ»ØÄ¬ÈÏÖµ
+        // æ ¹æ®é”®å€¼è·å–é€‰é¡¹æŒ‡é’ˆï¼Œå¦‚æœä¸å­˜åœ¨è¿”å›é»˜è®¤å€¼
         value_type Get(std::string strKey, const char* strDefault);
 
-        // ¸ù¾İ¼üÖµ»ñÈ¡Ñ¡ÏîÖ¸Õë£¬Èç¹û²»´æÔÚ·µ»Ø¿ÕÖ¸Õë
+        // æ ¹æ®é”®å€¼è·å–é€‰é¡¹æŒ‡é’ˆï¼Œå¦‚æœä¸å­˜åœ¨è¿”å›ç©ºæŒ‡é’ˆ
         value_type Get(std::string strKey);
 
-        // ¸ù¾İÏÂ±ê»ñÈ¡Ñ¡ÏîÖ¸Õë£¬Èç¹û²»´æÔÚ»á³öÏÖÔËĞĞÊ±´íÎó
+        // æ ¹æ®ä¸‹æ ‡è·å–é€‰é¡¹æŒ‡é’ˆï¼Œå¦‚æœä¸å­˜åœ¨ä¼šå‡ºç°è¿è¡Œæ—¶é”™è¯¯
         value_type Get(int iIndex) const;
 
-        // ²Ù×÷·ûÖØÔØ£¬¹¦ÄÜºÍÉÏÃæÒ»Ñù
+        // æ“ä½œç¬¦é‡è½½ï¼ŒåŠŸèƒ½å’Œä¸Šé¢ä¸€æ ·
         value_type operator[](int iIndex) const;
 
-        // »ñÈ¡²ÎÊıÊıÁ¿
+        // è·å–å‚æ•°æ•°é‡
         size_type GetParamsNumber() const;
 
-        // ÖØÖÃKey-ValueÓ³Éä±í
-        // # ÔÚµÚÒ»´Îµ÷ÓÃGet(×Ö·û´®[, Ä¬ÈÏÖµ])ºó»á½¨Á¢Ó³Éä±í
-        // # Èç¹ûÕâÖ®ºóAddÁË²ÎÊı¶øÃ»ÓĞµ÷ÓÃ´Ëº¯ÊıÖØÖÃÓ³Éä±í
-        // # ĞÂµÄ±äÁ¿½«²»»á½øÈëÓ³Éä±í
+        // é‡ç½®Key-Valueæ˜ å°„è¡¨
+        // # åœ¨ç¬¬ä¸€æ¬¡è°ƒç”¨Get(å­—ç¬¦ä¸²[, é»˜è®¤å€¼])åä¼šå»ºç«‹æ˜ å°„è¡¨
+        // # å¦‚æœè¿™ä¹‹åAddäº†å‚æ•°è€Œæ²¡æœ‰è°ƒç”¨æ­¤å‡½æ•°é‡ç½®æ˜ å°„è¡¨
+        // # æ–°çš„å˜é‡å°†ä¸ä¼šè¿›å…¥æ˜ å°„è¡¨
         void ResetKeyValueMap();
+
+        // è®¾ç½®é€ä¼ å‚æ•°åˆ—è¡¨
+        void SetExtParam(void* pParam);
+
+        // è·å–é€ä¼ å‚æ•°åˆ—è¡¨
+        void* GetExtParam() const;
     };
 }
 
