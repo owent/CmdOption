@@ -4,7 +4,7 @@
 *  Created on: 2011-12-29
 *      Author: OWenT
 *
-* Ó¦ÓÃ³ÌĞòÃüÁî´¦Àí
+* åº”ç”¨ç¨‹åºå‘½ä»¤å¤„ç†
 *
 */
 
@@ -12,7 +12,7 @@
 
 namespace copt
 {
-    CmdOptionList::CmdOptionList()
+    CmdOptionList::CmdOptionList(): m_pExtParam(NULL)
     {
     }
 
@@ -36,13 +36,13 @@ namespace copt
     {
         typedef std::map<std::string, value_type> key_map_type;
         typedef std::vector<value_type> keys_type;
-        // ÒÑ¾­³õÊ¼»¯£¬Ìø¹ı
+        // å·²ç»åˆå§‹åŒ–ï¼Œè·³è¿‡
         if (m_pKeyValue.get() != NULL)
             return;
 
         m_pKeyValue = std::shared_ptr<key_map_type>(new key_map_type());
 
-        keys_type::size_type uLen = (m_stKeys.size() / 2) * 2; // È¥³ıÄ©Î²ÎŞvalueµÄkey
+        keys_type::size_type uLen = (m_stKeys.size() / 2) * 2; // å»é™¤æœ«å°¾æ— valueçš„key
         for (keys_type::size_type i = 0; i < uLen; i += 2) 
         {
             (*m_pKeyValue)[m_stKeys[i]->AsString()] = m_stKeys[i + 1];
@@ -56,9 +56,10 @@ namespace copt
 
     void CmdOptionList::Clear()
     {
-        m_pKeyValue.reset();    // É¾³ıkey-valueÓ³Éä
-        m_stKeys.clear();       // É¾³ıË÷ÒıÏÂ±êÓ³Éä
-        m_stCmdArray.clear();   // É¾³ıÖ¸ÁîÕ»¼¯ºÏ
+        m_pKeyValue.reset();    // åˆ é™¤key-valueæ˜ å°„
+        m_stKeys.clear();       // åˆ é™¤ç´¢å¼•ä¸‹æ ‡æ˜ å°„
+        m_stCmdArray.clear();   // åˆ é™¤æŒ‡ä»¤æ ˆé›†åˆ
+        m_pExtParam = NULL;     // é€ä¼ å‚æ•°ç½®ç©º
     }
 
     void CmdOptionList::LoadCmdArray(const cmd_array_type& stCmds)
@@ -105,21 +106,32 @@ namespace copt
         return m_stKeys[iIndex];
     }
 
-    // ²Ù×÷·ûÖØÔØ£¬¹¦ÄÜºÍÉÏÃæÒ»Ñù
+    // æ“ä½œç¬¦é‡è½½ï¼ŒåŠŸèƒ½å’Œä¸Šé¢ä¸€æ ·
     CmdOptionList::value_type CmdOptionList::operator[](int iIndex) const
     {
         return m_stKeys[iIndex];
     }
 
-    // »ñÈ¡²ÎÊıÊıÁ¿
+    // è·å–å‚æ•°æ•°é‡
     CmdOptionList::size_type CmdOptionList::GetParamsNumber() const
     {
         return m_stKeys.size();
     }
 
-    // ÖØÖÃKey-ValueÓ³Éä±í
+    // é‡ç½®Key-Valueæ˜ å°„è¡¨
     void CmdOptionList::ResetKeyValueMap()
     {
         m_pKeyValue.reset();
     }
+
+    void CmdOptionList::SetExtParam(void* pParam)
+    {
+        m_pExtParam = pParam;
+    }
+
+    void* CmdOptionList::GetExtParam() const
+    {
+        return m_pExtParam;
+    }
 }
+
