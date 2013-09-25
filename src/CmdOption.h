@@ -13,12 +13,12 @@
  *  Last edit : 2013-07-23
  *      Author: OWenT
  *
- * Ó¦ÓÃ³ÌĞòÃüÁî´¦Àí
- * °ó¶¨¹æÔòºÍC++ 11²»Í¬£¬C++ 11µÄÀà³ÉÔ±°ó¶¨ÊÇ¸´ÖÆÀà£¬¶øÕâÀïÊÇÒıÓÃ
- * ×¢Òâ: ³ıÁËÀà°ó¶¨µÄÄ¿±êÀàÍâ£¬ËùÓĞÄ¬ÈÏµÄº¯ÊıÍÆ¶Ï¾ùÊÇ´«Öµ·½Ê½ÒıÈë
- *      ²¢ÇÒÊıÖµµÄ¸´ÖÆÔÚÖ´ĞĞBindCmdÊ±£¬Èç¹ûĞèÒªÒıÓÃĞèÒªÏÔÊ½Ö¸¶¨º¯ÊıÀàĞÍ
- *      ×¢ÒâÄ¬ÈÏÍÆµ¼²»Ö§³ÖÒşÊ½×ª»»(¼´¶ÔdoubleºÍintÊÇÄ¬ÈÏÍÆµ¼£¬µ«float¡¢short¡¢longµÈĞèÒªÖ¸Ã÷²ÎÊıÀàĞÍ)
- *      ÎªÁË¸ü¸ßĞ§£¬ËùÓĞ·µ»ØÖµ¾ùÎªPDOÀàĞÍºÍÖ¸Õë/ÖÇÄÜÖ¸Õë
+ * åº”ç”¨ç¨‹åºå‘½ä»¤å¤„ç†
+ * ç»‘å®šè§„åˆ™å’ŒC++ 11ä¸åŒï¼ŒC++ 11çš„ç±»æˆå‘˜ç»‘å®šæ˜¯å¤åˆ¶ç±»ï¼Œè€Œè¿™é‡Œæ˜¯å¼•ç”¨
+ * æ³¨æ„: é™¤äº†ç±»ç»‘å®šçš„ç›®æ ‡ç±»å¤–ï¼Œæ‰€æœ‰é»˜è®¤çš„å‡½æ•°æ¨æ–­å‡æ˜¯ä¼ å€¼æ–¹å¼å¼•å…¥
+ *      å¹¶ä¸”æ•°å€¼çš„å¤åˆ¶åœ¨æ‰§è¡ŒBindCmdæ—¶ï¼Œå¦‚æœéœ€è¦å¼•ç”¨éœ€è¦æ˜¾å¼æŒ‡å®šå‡½æ•°ç±»å‹
+ *      æ³¨æ„é»˜è®¤æ¨å¯¼ä¸æ”¯æŒéšå¼è½¬æ¢(å³å¯¹doubleå’Œintæ˜¯é»˜è®¤æ¨å¯¼ï¼Œä½†floatã€shortã€longç­‰éœ€è¦æŒ‡æ˜å‚æ•°ç±»å‹)
+ *      ä¸ºäº†æ›´é«˜æ•ˆï¼Œæ‰€æœ‰è¿”å›å€¼å‡ä¸ºPDOç±»å‹å’ŒæŒ‡é’ˆ/æ™ºèƒ½æŒ‡é’ˆ
  *
  */
 
@@ -29,7 +29,7 @@
 #include <map>
 
 
-// ÔØÈë°ó¶¨Æ÷
+// è½½å…¥ç»‘å®šå™¨
 #include "CmdOptionBind.h"
 
 #include "CmdOptionString.h"
@@ -38,40 +38,40 @@
 
 namespace copt
 {
-    // ±ê×¼Ö¸Áî´¦Àíº¯Êı(ÎŞ·µ»ØÖµ£¬²ÎÊıÎªÑ¡ÏîµÄÓ³Éä±í)
-    // void function_name (CmdOptionList&, [²ÎÊı]); // º¯Êı²ÎÊı¿ÉÑ¡
-    // void function_name (callback_param, [²ÎÊı]); // º¯Êı²ÎÊı¿ÉÑ¡
+    // æ ‡å‡†æŒ‡ä»¤å¤„ç†å‡½æ•°(æ— è¿”å›å€¼ï¼Œå‚æ•°ä¸ºé€‰é¡¹çš„æ˜ å°„è¡¨)
+    // void function_name (CmdOptionList&, [å‚æ•°]); // å‡½æ•°å‚æ•°å¯é€‰
+    // void function_name (callback_param, [å‚æ•°]); // å‡½æ•°å‚æ•°å¯é€‰
 
-    // ÖµÀàĞÍ
+    // å€¼ç±»å‹
     typedef std::shared_ptr<copt::CmdOptionValue> value_type;
 
 
     /**
-     * ÃüÁî´¦Àíº¯Êı
-     * ÄÚ¶¨ÃüÁî/±äÁ¿ÁĞ±í(ÓÃÓÚ´¦ÀíÄÚ²¿ÊÂ¼ş):
-     *      @OnError    :  ³ö´íÊ±´¥·¢
-     *          @ErrorMsg   : @OnError º¯ÊıµÄ´íÎóÃû³Æ
+     * å‘½ä»¤å¤„ç†å‡½æ•°
+     * å†…å®šå‘½ä»¤/å˜é‡åˆ—è¡¨(ç”¨äºå¤„ç†å†…éƒ¨äº‹ä»¶):
+     *      @OnError    :  å‡ºé”™æ—¶è§¦å‘
+     *          @ErrorMsg   : @OnError å‡½æ•°çš„é”™è¯¯åç§°
      *
-     *      @OnDefault  :  Ä¬ÈÏÖ´ĞĞº¯Êı(ÓÃÓÚÖ´ĞĞÅúÁ¿ÃüÁîÊ±µÄµÚÒ»¸öÖ¸ÁîÇ°µÄ²ÎÊı)
-     *                     ×¢Òâ£ºÈç¹ûµÚÒ»¸ö²ÎÊı¾ÍÊÇÖ¸ÁîÔò@OnDefault»á±»´«Èë¿Õ²ÎÊıÖ´ĞĞ
+     *      @OnDefault  :  é»˜è®¤æ‰§è¡Œå‡½æ•°(ç”¨äºæ‰§è¡Œæ‰¹é‡å‘½ä»¤æ—¶çš„ç¬¬ä¸€ä¸ªæŒ‡ä»¤å‰çš„å‚æ•°)
+     *                     æ³¨æ„ï¼šå¦‚æœç¬¬ä¸€ä¸ªå‚æ•°å°±æ˜¯æŒ‡ä»¤åˆ™@OnDefaultä¼šè¢«ä¼ å…¥ç©ºå‚æ•°æ‰§è¡Œ
      *
-     *      @OnCallFunc :  ·ÖÀë²ÎÊıºó£¬×ªÈëÃüÁîÇ°(½«´«ÈëËùÓĞ²ÎÊı£¬½öÏŞÓÚ×ÓCmdOptionBind<TCmdStr>Ö´ĞĞÊ±)
-     *                     ½¨Òé£º¿ÉÒÔÔÚÕâ¸öÊÂ¼şÏìÓ¦º¯ÊıÀïÔÙ°ó¶¨ÆäËûÃüÁî£¬¼õÉÙÖ¸ÁîÈßÓà
-     *                     [×¢: µ÷ÓÃStartº¯Êı²»»áÏìÓ¦Õâ¸öÊÂ¼ş]
+     *      @OnCallFunc :  åˆ†ç¦»å‚æ•°åï¼Œè½¬å…¥å‘½ä»¤å‰(å°†ä¼ å…¥æ‰€æœ‰å‚æ•°ï¼Œä»…é™äºå­CmdOptionBind<TCmdStr>æ‰§è¡Œæ—¶)
+     *                     å»ºè®®ï¼šå¯ä»¥åœ¨è¿™ä¸ªäº‹ä»¶å“åº”å‡½æ•°é‡Œå†ç»‘å®šå…¶ä»–å‘½ä»¤ï¼Œå‡å°‘æŒ‡ä»¤å†—ä½™
+     *                     [æ³¨: è°ƒç”¨Startå‡½æ•°ä¸ä¼šå“åº”è¿™ä¸ªäº‹ä»¶]
      */
     template<typename TCmdStr>
     class CmdOptionBind: public binder::CmdOptionBindBase
     {
     protected:
-        static short m_strMapValue[256]; // ¼ÇÂ¼²»Í¬×Ö·ûµÄÓ³Éä¹ØÏµ
+        static short m_strMapValue[256]; // è®°å½•ä¸åŒå­—ç¬¦çš„æ˜ å°„å…³ç³»
 
         typedef std::map<TCmdStr, std::shared_ptr<binder::CmdOptionBindBase> > funmap_type;
-        funmap_type m_stCallbackFuns; // ¼ÇÂ¼ÃüÁîµÄÓ³Éäº¯Êı
+        funmap_type m_stCallbackFuns; // è®°å½•å‘½ä»¤çš„æ˜ å°„å‡½æ•°
 
         /**
-         * Ö´ĞĞÃüÁî
-         * @param strCmd Ö¸ÁîÃû³Æ
-         * @param stParams Ö¸Áî²ÎÊı
+         * æ‰§è¡Œå‘½ä»¤
+         * @param strCmd æŒ‡ä»¤åç§°
+         * @param stParams æŒ‡ä»¤å‚æ•°
          */
         void runCmd(const TCmdStr& strCmd, callback_param stParams) const
         {
@@ -79,19 +79,19 @@ namespace copt
 
             if (stIter == m_stCallbackFuns.end())
             {
-                // ÄÚ¶¨ÃüÁî²»±¨¡°ÕÒ²»µ½Ö¸Áî¡±´í
+                // å†…å®šå‘½ä»¤ä¸æŠ¥â€œæ‰¾ä¸åˆ°æŒ‡ä»¤â€é”™
                 if (strCmd == "@OnDefault")
                     return;
 
-                stIter = m_stCallbackFuns.find("@OnError"); // ²éÕÒ´íÎó´¦Àíº¯Êı
+                stIter = m_stCallbackFuns.find("@OnError"); // æŸ¥æ‰¾é”™è¯¯å¤„ç†å‡½æ•°
                 if (stIter != m_stCallbackFuns.end())
                 {
-                    // Ä©Î²ÎŞ²ÎÊıKeyÌî³ä¿ÕValue
+                    // æœ«å°¾æ— å‚æ•°Keyå¡«å……ç©ºValue
                     if (stParams.GetParamsNumber() % 2)
                         stParams.Add("");
 
                     stParams.AppendCmd(strCmd.c_str(), std::shared_ptr<binder::CmdOptionBindBase>());
-                    // ´íÎó¸½¼ÓÄÚÈİ(´íÎóÄÚÈİ)
+                    // é”™è¯¯é™„åŠ å†…å®¹(é”™è¯¯å†…å®¹)
                     stParams.Add("@ErrorMsg");
                     stParams.Add("Command Invalid");
                     (*stIter->second)(stParams);
@@ -103,17 +103,17 @@ namespace copt
         }
 
         /**
-         * ´Ó×Ö·û´®»ñÈ¡Ò»¸ö×Ö¶Î£¨·µ»ØÎ´´¦ÀíµÄ×Ö·û´®½áÎ²£©
-         * @param strBegin Òª½âÎöµÄ×Ö·û´®µÄÆğÊ¼Î»ÖÃ
-         * @param strVal ½âÎö½á¹û
-         * @return Î´½âÎö²¿·ÖµÄ¿ªÊ¼Î»ÖÃ
+         * ä»å­—ç¬¦ä¸²è·å–ä¸€ä¸ªå­—æ®µï¼ˆè¿”å›æœªå¤„ç†çš„å­—ç¬¦ä¸²ç»“å°¾ï¼‰
+         * @param strBegin è¦è§£æçš„å­—ç¬¦ä¸²çš„èµ·å§‹ä½ç½®
+         * @param strVal è§£æç»“æœ
+         * @return æœªè§£æéƒ¨åˆ†çš„å¼€å§‹ä½ç½®
          */
         const char* getSegment(const char* strBegin, std::string& strVal) const
         {
             strVal.clear();
-            char cFlag;  // ×Ö·û´®¿ª±Õ×Ö·û
+            char cFlag;  // å­—ç¬¦ä¸²å¼€é—­å­—ç¬¦
 
-            // È¥³ı·Ö¸ô·ûÇ°×º
+            // å»é™¤åˆ†éš”ç¬¦å‰ç¼€
             while (*strBegin && (m_strMapValue[(int)*strBegin] & SPLITCHAR))
                 ++ strBegin;
 
@@ -142,20 +142,20 @@ namespace copt
                     }
 
                     ++ strBegin;
-                    break;  // ×Ö·û´®½áÊøºó²ÎÊı½áÊø
+                    break;  // å­—ç¬¦ä¸²ç»“æŸåå‚æ•°ç»“æŸ
                 }
             }
 
-            // È¥³ı·Ö¸ô·ûºó×º
+            // å»é™¤åˆ†éš”ç¬¦åç¼€
             while (*strBegin && (m_strMapValue[(int)*strBegin] & SPLITCHAR))
                 ++ strBegin;
             return strBegin;
         }
 
         /**
-         * ¶àÖ¸Áî·ÖÀë
-         * @param strBegin Ô´×Ö·û´®
-         * @return ·ÖÀë½á¹û
+         * å¤šæŒ‡ä»¤åˆ†ç¦»
+         * @param strBegin æºå­—ç¬¦ä¸²
+         * @return åˆ†ç¦»ç»“æœ
          */
         std::vector<std::string> splitCmd(const char* strBegin) const
         {
@@ -163,11 +163,11 @@ namespace copt
             for (const char* pBegin = strBegin; (*pBegin);)
             {
                 std::string strCmd;
-                // È¥³ıÃüÁî·Ö¸ô·ûÇ°×º
+                // å»é™¤å‘½ä»¤åˆ†éš”ç¬¦å‰ç¼€
                 while ((*pBegin) && (m_strMapValue[(int)*pBegin] & CMDSPLIT))
                     ++ pBegin;
 
-                // ·ÖÀëÃüÁî
+                // åˆ†ç¦»å‘½ä»¤
                 while ((*pBegin) && !(m_strMapValue[(int)*pBegin] & CMDSPLIT))
                 {
                     strCmd.push_back(*pBegin);
@@ -182,7 +182,7 @@ namespace copt
         }
 
         /**
-         * Ä¬ÈÏ°ïÖúº¯Êı
+         * é»˜è®¤å¸®åŠ©å‡½æ•°
          */
         void onHelp(callback_param)
         {
@@ -192,29 +192,29 @@ namespace copt
 
     public:
         /**
-         * ¹¹Ôìº¯Êı
+         * æ„é€ å‡½æ•°
          */
         CmdOptionBind()
         {
-            // Èç¹ûÒÑ³õÊ¼»¯ÔòÌø¹ı
+            // å¦‚æœå·²åˆå§‹åŒ–åˆ™è·³è¿‡
             if (m_strMapValue[(int)' '] & SPLITCHAR)
                 return;
 
-            // ·Ö¸ô·û
+            // åˆ†éš”ç¬¦
             m_strMapValue[(int)' '] = m_strMapValue[(int)'\t'] =
                 m_strMapValue[(int)'\r'] = m_strMapValue[(int)'\n'] = SPLITCHAR;
-            // ×Ö·û´®¿ª±Õ·û
+            // å­—ç¬¦ä¸²å¼€é—­ç¬¦
             m_strMapValue[(int)'\''] = m_strMapValue[(int)'\"'] = STRINGSYM;
-            // ×ªÒå±ê¼Ç·û
+            // è½¬ä¹‰æ ‡è®°ç¬¦
             m_strMapValue[(int)'\\'] = TRANSLATE;
-            // Ö¸Áî·Ö¸ô·û
+            // æŒ‡ä»¤åˆ†éš”ç¬¦
             m_strMapValue[(int)' '] |= CMDSPLIT;
             m_strMapValue[(int)','] = m_strMapValue[(int)';'] = CMDSPLIT;
         }
 
         /**
-         * »ñÈ¡ÒÑ°ó¶¨µÄÖ¸ÁîÁĞ±í
-         * @return Ö¸ÁîÁĞ±íÖ¸Õë
+         * è·å–å·²ç»‘å®šçš„æŒ‡ä»¤åˆ—è¡¨
+         * @return æŒ‡ä»¤åˆ—è¡¨æŒ‡é’ˆ
          */
         std::shared_ptr<std::vector<const char*> > GetCmdNames() const
         {
@@ -230,9 +230,9 @@ namespace copt
         }
 
         /**
-         * »ñÈ¡ÒÑ°ó¶¨µÄÖ¸Áî¶ÔÏó
-         * @param strCmdName Ö¸ÁîÃû³Æ
-         * @return °ó¶¨µÄÖ¸Áî¶ÔÏóÖ¸Õë, Î´ÕÒµ½·µ»Ø¿ÕÖ¸ÕëÖ¸Õë
+         * è·å–å·²ç»‘å®šçš„æŒ‡ä»¤å¯¹è±¡
+         * @param strCmdName æŒ‡ä»¤åç§°
+         * @return ç»‘å®šçš„æŒ‡ä»¤å¯¹è±¡æŒ‡é’ˆ, æœªæ‰¾åˆ°è¿”å›ç©ºæŒ‡é’ˆæŒ‡é’ˆ
          */
         std::shared_ptr<binder::CmdOptionBindBase> GetBindedCmd(const char* strCmdName) const
         {
@@ -243,18 +243,18 @@ namespace copt
         }
 
         /**
-         * ´¦ÀíÖ¸Áî
-         * ËµÃ÷£º ÔÚµÚÒ»¸öÖ¸ÁîÇ°µÄ²ÎÊı¶¼½«´«Èë@OnDefaultÊÂ¼ş
-         *     ²ÎÊı¿ÉÍ¨¹ıGet[Êı×éÏÂ±ê]»ñÈ¡
-         *     µÚÒ»´ÎÊ¹ÓÃGet[×Ö·û´®]Ê±½«¹¹½¨²ÎÊıÓ³Éä±í£¬Get(0)Îªkey£¬Get(1)Îªvalue£¬Get(2)Îªkey£¬Get(3)Îªvalue£¬ÒÀ´ËÀàÍÆ
-         *     Èç¹û×îºóÒ»×ékeyÃ»ÓĞvalue£¬Ö´ĞĞGet[key]½«·µ»Ø¿ÕÖ¸Õë
-         *     ×¢Òâ£ºGet[Å¼ÊıÏÂ±ê]¶ÔÓ¦µÄËùÓĞvalueÖµºÍGet[×Ö·û´®]·µ»ØµÄÖ¸Õë¹²ÏíÊı¾İ(¼´¸ÄÁËÒ»¸öÁíÒ»¸öÒ²ËæÖ®¸ü¸Ä)
+         * å¤„ç†æŒ‡ä»¤
+         * è¯´æ˜ï¼š åœ¨ç¬¬ä¸€ä¸ªæŒ‡ä»¤å‰çš„å‚æ•°éƒ½å°†ä¼ å…¥@OnDefaultäº‹ä»¶
+         *     å‚æ•°å¯é€šè¿‡Get[æ•°ç»„ä¸‹æ ‡]è·å–
+         *     ç¬¬ä¸€æ¬¡ä½¿ç”¨Get[å­—ç¬¦ä¸²]æ—¶å°†æ„å»ºå‚æ•°æ˜ å°„è¡¨ï¼ŒGet(0)ä¸ºkeyï¼ŒGet(1)ä¸ºvalueï¼ŒGet(2)ä¸ºkeyï¼ŒGet(3)ä¸ºvalueï¼Œä¾æ­¤ç±»æ¨
+         *     å¦‚æœæœ€åä¸€ç»„keyæ²¡æœ‰valueï¼Œæ‰§è¡ŒGet[key]å°†è¿”å›ç©ºæŒ‡é’ˆ
+         *     æ³¨æ„ï¼šGet[å¶æ•°ä¸‹æ ‡]å¯¹åº”çš„æ‰€æœ‰valueå€¼å’ŒGet[å­—ç¬¦ä¸²]è¿”å›çš„æŒ‡é’ˆå…±äº«æ•°æ®(å³æ”¹äº†ä¸€ä¸ªå¦ä¸€ä¸ªä¹Ÿéšä¹‹æ›´æ”¹)
          */
 
         /**
-         * ´¦ÀíÒÑ·ÖÀëÖ¸Áî(Ê¹ÓÃCmdOptionList´æ´¢²ÎÊı¼¯)
-         * @param stArgs Êı¾İ¼¯ºÏ
-         * @param bSingleCmd ÊÇ·ñÇ¿ÖÆµ¥Ö¸Áî, Èç¹û²»Ç¿ÖÆ, ÔòÖ¸ÁîÃû³Æ²»ÄÜÖØ¸´
+         * å¤„ç†å·²åˆ†ç¦»æŒ‡ä»¤(ä½¿ç”¨CmdOptionListå­˜å‚¨å‚æ•°é›†)
+         * @param stArgs æ•°æ®é›†åˆ
+         * @param bSingleCmd æ˜¯å¦å¼ºåˆ¶å•æŒ‡ä»¤, å¦‚æœä¸å¼ºåˆ¶, åˆ™æŒ‡ä»¤åç§°ä¸èƒ½é‡å¤
          */
         void Start(callback_param stArgs, bool bSingleCmd = false) const
         {
@@ -266,17 +266,18 @@ namespace copt
                 ++ i;
                 stCmdArgs.Clear();
                 stCmdArgs.LoadCmdArray(stArgs.GetCmdArray());
+                stCmdArgs.SetExtParam(stArgs.GetExtParam());
 
                 for (; i < argv; ++ i)
                 {
-                    // °ÑËùÓĞµÄ·ÇÖ¸Áî×Ö·û´®ÉèÎªÖ¸Áî²ÎÊı
+                    // æŠŠæ‰€æœ‰çš„éæŒ‡ä»¤å­—ç¬¦ä¸²è®¾ä¸ºæŒ‡ä»¤å‚æ•°
                     if (m_stCallbackFuns.find(stArgs[i]->AsString()) == m_stCallbackFuns.end())
                     {
                         stCmdArgs.Add(stArgs[i]->AsString());
                     }
                     else
                     {
-                        // Èç¹ûÊÇµ¥Ö¸ÁîÇÒÓĞÎ´Öª²ÎÊıÔò·Ö·¢@OnError´íÎó´¦Àí
+                        // å¦‚æœæ˜¯å•æŒ‡ä»¤ä¸”æœ‰æœªçŸ¥å‚æ•°åˆ™åˆ†å‘@OnErroré”™è¯¯å¤„ç†
                         if (bSingleCmd && stCmdArgs.GetParamsNumber() > 0)
                         {
                             runCmd(strCmd, stCmdArgs);
@@ -284,7 +285,7 @@ namespace copt
                             stCmdArgs.LoadCmdArray(stArgs.GetCmdArray());
                         }
 
-                        // ×·¼ÓËùÓĞ²ÎÊı£¬Ö´ĞĞµ¥Ö¸Áî
+                        // è¿½åŠ æ‰€æœ‰å‚æ•°ï¼Œæ‰§è¡Œå•æŒ‡ä»¤
                         if (bSingleCmd)
                         {
                             strCmd = TCmdStr(stArgs[i]->AsCppString().c_str(), stArgs[i]->AsCppString().size());
@@ -303,61 +304,67 @@ namespace copt
         }
 
         /**
-         * ´¦ÀíÒÑ·ÖÀëÖ¸Áî(Ê¹ÓÃchar**´æ´¢²ÎÊı¼¯)
-         * @param argv ²ÎÊı¸öÊı
-         * @param argc ²ÎÊıÁĞ±í
-         * @param bSingleCmd ÊÇ·ñÇ¿ÖÆµ¥Ö¸Áî, Èç¹û²»Ç¿ÖÆ, ÔòÖ¸ÁîÃû³Æ²»ÄÜÖØ¸´
+         * å¤„ç†å·²åˆ†ç¦»æŒ‡ä»¤(ä½¿ç”¨char**å­˜å‚¨å‚æ•°é›†)
+         * @param argv å‚æ•°ä¸ªæ•°
+         * @param argc å‚æ•°åˆ—è¡¨
+         * @param bSingleCmd æ˜¯å¦å¼ºåˆ¶å•æŒ‡ä»¤, å¦‚æœä¸å¼ºåˆ¶, åˆ™æŒ‡ä»¤åç§°ä¸èƒ½é‡å¤
+         * @param pExtParam é€ä¼ å‚æ•°
          */
-        inline void Start(int argv, const char* argc[], bool bSingleCmd = false) const
+        inline void Start(int argv, const char* argc[], bool bSingleCmd = false, void* pExtParam = NULL) const
         {
             CmdOptionList stList(argv, argc);
+            stList.SetExtParam(pExtParam);
             Start(stList, bSingleCmd);
         }
 
         /**
-         * ´¦ÀíÒÑ·ÖÀëÖ¸Áî(Ê¹ÓÃstd::vector<std::string>´æ´¢²ÎÊı¼¯)
-         * @param stCmds Êı¾İ¼¯ºÏ
-         * @param bSingleCmd ÊÇ·ñÇ¿ÖÆµ¥Ö¸Áî, Èç¹û²»Ç¿ÖÆ, ÔòÖ¸ÁîÃû³Æ²»ÄÜÖØ¸´
+         * å¤„ç†å·²åˆ†ç¦»æŒ‡ä»¤(ä½¿ç”¨std::vector<std::string>å­˜å‚¨å‚æ•°é›†)
+         * @param stCmds æ•°æ®é›†åˆ
+         * @param bSingleCmd æ˜¯å¦å¼ºåˆ¶å•æŒ‡ä»¤, å¦‚æœä¸å¼ºåˆ¶, åˆ™æŒ‡ä»¤åç§°ä¸èƒ½é‡å¤
+         * @param pExtParam é€ä¼ å‚æ•°
          */
-        inline void Start(const std::vector<std::string>& stCmds, bool bSingleCmd = false) const
+        inline void Start(const std::vector<std::string>& stCmds, bool bSingleCmd = false, void* pExtParam = NULL) const
         {
             CmdOptionList stList(stCmds);
+            stList.SetExtParam(pExtParam);
             Start(stList, bSingleCmd);
         }
         
         /**
-         * ´¦ÀíÎ´·ÖÀëÖ¸Áî(Ê¹ÓÃconst char*´æ´¢²ÎÊı¼¯×Ö·û´®)
-         * @param strCmd Ö¸Áî
-         * @param bSingleCmd ÊÇ·ñÇ¿ÖÆµ¥Ö¸Áî, Èç¹û²»Ç¿ÖÆ, ÔòÖ¸ÁîÃû³Æ²»ÄÜÖØ¸´
+         * å¤„ç†æœªåˆ†ç¦»æŒ‡ä»¤(ä½¿ç”¨const char*å­˜å‚¨å‚æ•°é›†å­—ç¬¦ä¸²)
+         * @param strCmd æŒ‡ä»¤
+         * @param bSingleCmd æ˜¯å¦å¼ºåˆ¶å•æŒ‡ä»¤, å¦‚æœä¸å¼ºåˆ¶, åˆ™æŒ‡ä»¤åç§°ä¸èƒ½é‡å¤
          */
-        void Start(const char* strCmd, bool bSingleCmd = false) const
+        void Start(const char* strCmd, bool bSingleCmd = false, void* pExtParam = NULL) const
         {
             CmdOptionList stCmds;
             std::string strSeg;
 
-            // ·ÖÀëÖ¸Áî
+            // åˆ†ç¦»æŒ‡ä»¤
             while (*strCmd)
             {
                 strCmd = getSegment(strCmd, strSeg);
                 stCmds.Add(strSeg.c_str());
             }
         
+            stCmds.SetExtParam(pExtParam);
+
             Start(stCmds, bSingleCmd);
         }
 
         /**
-         * ´¦ÀíÎ´·ÖÀëÖ¸Áî(Ê¹ÓÃconst std::string&´æ´¢²ÎÊı¼¯×Ö·û´®)
-         * @param strCmd Ö¸Áî
-         * @param bSingleCmd ÊÇ·ñÇ¿ÖÆµ¥Ö¸Áî, Èç¹û²»Ç¿ÖÆ, ÔòÖ¸ÁîÃû³Æ²»ÄÜÖØ¸´
+         * å¤„ç†æœªåˆ†ç¦»æŒ‡ä»¤(ä½¿ç”¨const std::string&å­˜å‚¨å‚æ•°é›†å­—ç¬¦ä¸²)
+         * @param strCmd æŒ‡ä»¤
+         * @param bSingleCmd æ˜¯å¦å¼ºåˆ¶å•æŒ‡ä»¤, å¦‚æœä¸å¼ºåˆ¶, åˆ™æŒ‡ä»¤åç§°ä¸èƒ½é‡å¤
          */
-        inline void Start(const std::string& strCmd, bool bSingleCmd = false) const
+        inline void Start(const std::string& strCmd, bool bSingleCmd = false, void* pExtParam = NULL) const
         {
-            Start(strCmd.c_str(), bSingleCmd);
+            Start(strCmd.c_str(), bSingleCmd, pExtParam);
         }
 
         /**
-         * ½â°óÖ¸Áî
-         * @param strCmd Ö¸ÁîÃû³Æ
+         * è§£ç»‘æŒ‡ä»¤
+         * @param strCmd æŒ‡ä»¤åç§°
          */
         inline void UnBindCmd(const std::string& strCmd)
         {
@@ -366,7 +373,7 @@ namespace copt
         }
 
         /**
-         * ½â°óÈ«²¿Ö¸Áî
+         * è§£ç»‘å…¨éƒ¨æŒ‡ä»¤
          */
         inline void UnBindAllCmd()
         {
@@ -374,8 +381,8 @@ namespace copt
         }
 
         /**
-         * °ó¶¨Ä¬ÈÏ°ïÖúº¯Êı
-         * @param strHelpCmd °ïÖúÃüÁîÃû³Æ
+         * ç»‘å®šé»˜è®¤å¸®åŠ©å‡½æ•°
+         * @param strHelpCmd å¸®åŠ©å‘½ä»¤åç§°
          */
         inline std::shared_ptr< binder::CmdOptionBindT<void, void (CmdOptionBind<TCmdStr>::*)(callback_param), binder::CmdOptionBindMFParamList0<CmdOptionBind<TCmdStr> > > > 
             BindHelpCmd(const char* strHelpCmd)
@@ -384,22 +391,22 @@ namespace copt
         }
 
         /**
-         * Ö´ĞĞ×Ó½á¹¹
+         * æ‰§è¡Œå­ç»“æ„
          */
         virtual void operator()(callback_param arg)
         {
-            // ÏìÓ¦@OnCallFuncÊÂ¼ş
+            // å“åº”@OnCallFuncäº‹ä»¶
             typename funmap_type::const_iterator iter = m_stCallbackFuns.find("@OnCallFunc");
             if (iter != m_stCallbackFuns.end())
                 (*iter->second)(arg);
         
-            // ÖØĞÂÖ´ĞĞÖ¸Áî¼¯, ½øÈë×Ó½á¹¹µÄÒ»¶¨ÊÇµ¥Ö¸Áî
+            // é‡æ–°æ‰§è¡ŒæŒ‡ä»¤é›†, è¿›å…¥å­ç»“æ„çš„ä¸€å®šæ˜¯å•æŒ‡ä»¤
             Start(arg, true);
         }
 
         /**
-         * »ñÈ¡ÃüÁî¼¯ºÏµÄ°ïÖúĞÅÏ¢
-         * @param strPre Ç°×º
+         * è·å–å‘½ä»¤é›†åˆçš„å¸®åŠ©ä¿¡æ¯
+         * @param strPre å‰ç¼€
          */
         virtual std::string GetHelpMsg(const char* strPre = "")
         {
@@ -408,11 +415,11 @@ namespace copt
 
             for (typename funmap_type::const_iterator iter = m_stCallbackFuns.begin(); iter != m_stCallbackFuns.end(); ++ iter)
             {
-                // É¾³ıÖØ¸´µÄÒıÓÃ¶ÔÏó
+                // åˆ é™¤é‡å¤çš„å¼•ç”¨å¯¹è±¡
                 if (stSet.find(iter->second) != stSet.end())
                     continue;
 
-                // Ìø¹ıÄÚÖÃÃüÁî
+                // è·³è¿‡å†…ç½®å‘½ä»¤
                 if ('@' == *iter->first.c_str())
                     continue;
 
@@ -430,20 +437,20 @@ namespace copt
         }
 
         /**
-         * Ôö¼ÓÖ¸Áî´¦Àíº¯Êı (ÏàÍ¬ÃüÁî»á±»¸²¸Ç)
-         * Ö§³ÖÆÕÍ¨º¯ÊıºÍÀà³ÉÔ±º¯Êı
-         * ×¢Òâ£ºËùÓĞ´«ÈëµÄÀàÎªÒıÓÃ£¬ÇëÈ·±£ÔÚÖ´ĞĞStartÊ±Àà¶ÔÏóÎ´±»ÊÍ·Å£¨ÌØ±ğ×¢ÒâÖ¸ÕëºÍ¾Ö²¿±äÁ¿£©
-         * ×¢Òâ£º²ÎÊıµÄ¸´ÖÆ·¢ÉúÔÚÖ´ĞĞBindCmdº¯ÊıÊ±
+         * å¢åŠ æŒ‡ä»¤å¤„ç†å‡½æ•° (ç›¸åŒå‘½ä»¤ä¼šè¢«è¦†ç›–)
+         * æ”¯æŒæ™®é€šå‡½æ•°å’Œç±»æˆå‘˜å‡½æ•°
+         * æ³¨æ„ï¼šæ‰€æœ‰ä¼ å…¥çš„ç±»ä¸ºå¼•ç”¨ï¼Œè¯·ç¡®ä¿åœ¨æ‰§è¡ŒStartæ—¶ç±»å¯¹è±¡æœªè¢«é‡Šæ”¾ï¼ˆç‰¹åˆ«æ³¨æ„æŒ‡é’ˆå’Œå±€éƒ¨å˜é‡ï¼‰
+         * æ³¨æ„ï¼šå‚æ•°çš„å¤åˆ¶å‘ç”Ÿåœ¨æ‰§è¡ŒBindCmdå‡½æ•°æ—¶
          */
 
         /**
-         * °ó¶¨Àà³ÉÔ±º¯Êı£¨ÎŞ²ÎÊı£©
+         * ç»‘å®šç±»æˆå‘˜å‡½æ•°ï¼ˆæ— å‚æ•°ï¼‰
          * example:
-         *      *.BindCmd(ÃüÁîÃû³Æ, Àà³ÉÔ±º¯ÊıÖ¸Õë, Àà)
-         *      *.BindCmd<ÀàÃû>(ÃüÁîÃû³Æ, Àà³ÉÔ±º¯ÊıÖ¸Õë, Àà)
-         *      *.BindCmd<ÀàÃû, Àà³ÉÔ±º¯Êı·µ»ØÖµÀàĞÍ>(ÃüÁîÃû³Æ, Àà³ÉÔ±º¯ÊıÖ¸Õë, Àà)
+         *      *.BindCmd(å‘½ä»¤åç§°, ç±»æˆå‘˜å‡½æ•°æŒ‡é’ˆ, ç±»)
+         *      *.BindCmd<ç±»å>(å‘½ä»¤åç§°, ç±»æˆå‘˜å‡½æ•°æŒ‡é’ˆ, ç±»)
+         *      *.BindCmd<ç±»å, ç±»æˆå‘˜å‡½æ•°è¿”å›å€¼ç±»å‹>(å‘½ä»¤åç§°, ç±»æˆå‘˜å‡½æ•°æŒ‡é’ˆ, ç±»)
          */
-        template<typename _T, typename _R>  // °ó¶¨Àà(_T:Àà)
+        template<typename _T, typename _R>  // ç»‘å®šç±»(_T:ç±»)
         std::shared_ptr<binder::CmdOptionBindT<_R, _R (_T::*)(callback_param), binder::CmdOptionBindMFParamList0<_T> > > 
             BindCmd(const std::string strCmd, _R (_T::*fn)(callback_param), _T& t)
         {
@@ -464,15 +471,15 @@ namespace copt
         }
 
         /**
-         * °ó¶¨Àà³ÉÔ±º¯Êı
-         * BindCmd: °ó¶¨²ÎÊı[×¢ÒâÖµµÄ¸´ÖÆ·¢ÉúÔÚ±¾º¯ÊıÖ´ĞĞÊ±]
+         * ç»‘å®šç±»æˆå‘˜å‡½æ•°
+         * BindCmd: ç»‘å®šå‚æ•°[æ³¨æ„å€¼çš„å¤åˆ¶å‘ç”Ÿåœ¨æœ¬å‡½æ•°æ‰§è¡Œæ—¶]
          * example:
-         *      *.BindCmd(ÃüÁîÃû³Æ, Àà³ÉÔ±º¯ÊıÖ¸Õë, Àà, ²ÎÊı)                                     // Ä¬ÈÏÀàĞÍÍÆ¶ÏÊÇ´«Öµ¶ø·ÇÒıÓÃ
-         *      *.BindCmd<²ÎÊıÀàĞÍ, ´«ÈëÀàĞÍ>(ÃüÁîÃû³Æ, Àà³ÉÔ±º¯ÊıÖ¸Õë, Àà, ²ÎÊı)
-         *      *.BindCmd<²ÎÊıÀàĞÍ, ´«ÈëÀàĞÍ, ÀàÃû>(ÃüÁîÃû³Æ, Àà³ÉÔ±º¯ÊıÖ¸Õë, Àà, ²ÎÊı)
-         *      *.BindCmd<²ÎÊıÀàĞÍ, ´«ÈëÀàĞÍ, ÀàÃû, Àà³ÉÔ±º¯Êı·µ»ØÖµÀàĞÍ>(ÃüÁîÃû³Æ, Àà³ÉÔ±º¯ÊıÖ¸Õë, Àà, ²ÎÊı)
+         *      *.BindCmd(å‘½ä»¤åç§°, ç±»æˆå‘˜å‡½æ•°æŒ‡é’ˆ, ç±», å‚æ•°)                                     // é»˜è®¤ç±»å‹æ¨æ–­æ˜¯ä¼ å€¼è€Œéå¼•ç”¨
+         *      *.BindCmd<å‚æ•°ç±»å‹, ä¼ å…¥ç±»å‹>(å‘½ä»¤åç§°, ç±»æˆå‘˜å‡½æ•°æŒ‡é’ˆ, ç±», å‚æ•°)
+         *      *.BindCmd<å‚æ•°ç±»å‹, ä¼ å…¥ç±»å‹, ç±»å>(å‘½ä»¤åç§°, ç±»æˆå‘˜å‡½æ•°æŒ‡é’ˆ, ç±», å‚æ•°)
+         *      *.BindCmd<å‚æ•°ç±»å‹, ä¼ å…¥ç±»å‹, ç±»å, ç±»æˆå‘˜å‡½æ•°è¿”å›å€¼ç±»å‹>(å‘½ä»¤åç§°, ç±»æˆå‘˜å‡½æ•°æŒ‡é’ˆ, ç±», å‚æ•°)
          */
-        template<typename _Arg0, typename _BArg0, typename _T, typename _R>  // °ó¶¨Àà(_T:Àà)
+        template<typename _Arg0, typename _BArg0, typename _T, typename _R>  // ç»‘å®šç±»(_T:ç±»)
         std::shared_ptr<binder::CmdOptionBindT<_R, _R (_T::*)(callback_param, _Arg0), binder::CmdOptionBindMFParamList1<_T, _BArg0> > > 
             BindCmd(const std::string strCmd, _R (_T::*fn)(callback_param, _Arg0), _T& t, _BArg0 arg0)
         {
@@ -492,7 +499,7 @@ namespace copt
             return pFun;
         }
 
-        template<typename _Arg0, typename _Arg1, typename _BArg0, typename _BArg1, typename _T, typename _R>  // °ó¶¨Àà(_T:Àà)
+        template<typename _Arg0, typename _Arg1, typename _BArg0, typename _BArg1, typename _T, typename _R>  // ç»‘å®šç±»(_T:ç±»)
         std::shared_ptr<binder::CmdOptionBindT<_R, _R (_T::*)(callback_param, _Arg0, _Arg1), binder::CmdOptionBindMFParamList2<_T, _BArg0, _BArg1> > > 
             BindCmd(const std::string strCmd, _R (_T::*fn)(callback_param, _Arg0, _Arg1), _T& t, _BArg0 arg0, _BArg1 arg1)
         {
@@ -512,7 +519,7 @@ namespace copt
             return pFun;
         }
 
-        template<typename _Arg0, typename _Arg1, typename _Arg2, typename _BArg0, typename _BArg1, typename _BArg2, typename _T, typename _R>  // °ó¶¨Àà(_T:Àà)
+        template<typename _Arg0, typename _Arg1, typename _Arg2, typename _BArg0, typename _BArg1, typename _BArg2, typename _T, typename _R>  // ç»‘å®šç±»(_T:ç±»)
         std::shared_ptr<binder::CmdOptionBindT<_R, _R (_T::*)(callback_param, _Arg0, _Arg1, _Arg2), binder::CmdOptionBindMFParamList3<_T, _BArg0, _BArg1, _BArg2> > > 
             BindCmd(const std::string strCmd, _R (_T::*fn)(callback_param, _Arg0, _Arg1, _Arg2), _T& t, _BArg0 arg0, _BArg1 arg1, _BArg2 arg2)
         {
@@ -533,12 +540,12 @@ namespace copt
         }
 
         /**
-         * °ó¶¨ÆÕÍ¨º¯Êı£¨ÎŞ²ÎÊı£©
+         * ç»‘å®šæ™®é€šå‡½æ•°ï¼ˆæ— å‚æ•°ï¼‰
          * example:
-         *      *.BindCmd(ÃüÁîÃû³Æ, º¯ÊıÖ¸Õë)
-         *      *.BindCmd<º¯Êı·µ»ØÖµÀàĞÍ>(ÃüÁîÃû³Æ, º¯ÊıÖ¸Õë)
+         *      *.BindCmd(å‘½ä»¤åç§°, å‡½æ•°æŒ‡é’ˆ)
+         *      *.BindCmd<å‡½æ•°è¿”å›å€¼ç±»å‹>(å‘½ä»¤åç§°, å‡½æ•°æŒ‡é’ˆ)
          */
-        template<typename _R>   // °ó¶¨º¯Êı(_R: °ó¶¨º¯Êı·µ»ØÖµÀàĞÍ)
+        template<typename _R>   // ç»‘å®šå‡½æ•°(_R: ç»‘å®šå‡½æ•°è¿”å›å€¼ç±»å‹)
         std::shared_ptr<binder::CmdOptionBindT<_R, _R (*)(callback_param), binder::CmdOptionBindParamList0> > 
             BindCmd(const std::string strCmd, _R (*fn)(callback_param))
         {
@@ -559,14 +566,14 @@ namespace copt
         }
 
         /**
-         * °ó¶¨ÆÕÍ¨º¯Êı
-         * BindCmd: °ó¶¨²ÎÊı[×¢ÒâÖµµÄ¸´ÖÆ·¢ÉúÔÚ±¾º¯ÊıÖ´ĞĞÊ±]
+         * ç»‘å®šæ™®é€šå‡½æ•°
+         * BindCmd: ç»‘å®šå‚æ•°[æ³¨æ„å€¼çš„å¤åˆ¶å‘ç”Ÿåœ¨æœ¬å‡½æ•°æ‰§è¡Œæ—¶]
          * example:
-         *      *.BindCmd(ÃüÁîÃû³Æ, º¯ÊıÖ¸Õë, ²ÎÊı)                           // Ä¬ÈÏÀàĞÍÍÆ¶ÏÊÇ´«Öµ¶ø·ÇÒıÓÃ
-         *      *.BindCmd<²ÎÊıÀàĞÍ, ´«ÈëÀàĞÍ>(ÃüÁîÃû³Æ, º¯ÊıÖ¸Õë, ²ÎÊı)
-         *      *.BindCmd<²ÎÊıÀàĞÍ, ´«ÈëÀàĞÍ, º¯Êı·µ»ØÖµÀàĞÍ>(ÃüÁîÃû³Æ, º¯ÊıÖ¸Õë, ²ÎÊı)
+         *      *.BindCmd(å‘½ä»¤åç§°, å‡½æ•°æŒ‡é’ˆ, å‚æ•°)                           // é»˜è®¤ç±»å‹æ¨æ–­æ˜¯ä¼ å€¼è€Œéå¼•ç”¨
+         *      *.BindCmd<å‚æ•°ç±»å‹, ä¼ å…¥ç±»å‹>(å‘½ä»¤åç§°, å‡½æ•°æŒ‡é’ˆ, å‚æ•°)
+         *      *.BindCmd<å‚æ•°ç±»å‹, ä¼ å…¥ç±»å‹, å‡½æ•°è¿”å›å€¼ç±»å‹>(å‘½ä»¤åç§°, å‡½æ•°æŒ‡é’ˆ, å‚æ•°)
          */
-        template<typename _Arg0, typename _BArg0, typename _R>  // °ó¶¨º¯Êı(_Arg:²ÎÊı[×¢ÒâÖµµÄ¸´ÖÆ·¢ÉúÔÚ±¾º¯ÊıÖ´ĞĞÊ±], _R: °ó¶¨º¯Êı·µ»ØÖµÀàĞÍ)
+        template<typename _Arg0, typename _BArg0, typename _R>  // ç»‘å®šå‡½æ•°(_Arg:å‚æ•°[æ³¨æ„å€¼çš„å¤åˆ¶å‘ç”Ÿåœ¨æœ¬å‡½æ•°æ‰§è¡Œæ—¶], _R: ç»‘å®šå‡½æ•°è¿”å›å€¼ç±»å‹)
         std::shared_ptr<binder::CmdOptionBindT<_R, _R (*)(callback_param, _Arg0), binder::CmdOptionBindParamList1<_BArg0> > >
             BindCmd(const std::string strCmd, _R (*fn)(callback_param, _Arg0), _BArg0 arg0)
         {
@@ -586,7 +593,7 @@ namespace copt
             return pFun;
         }
 
-        template<typename _Arg0, typename _Arg1, typename _BArg0, typename _BArg1, typename _R>  // °ó¶¨º¯Êı(_Arg:²ÎÊı[×¢ÒâÖµµÄ¸´ÖÆ·¢ÉúÔÚ±¾º¯ÊıÖ´ĞĞÊ±], _R: °ó¶¨º¯Êı·µ»ØÖµÀàĞÍ)
+        template<typename _Arg0, typename _Arg1, typename _BArg0, typename _BArg1, typename _R>  // ç»‘å®šå‡½æ•°(_Arg:å‚æ•°[æ³¨æ„å€¼çš„å¤åˆ¶å‘ç”Ÿåœ¨æœ¬å‡½æ•°æ‰§è¡Œæ—¶], _R: ç»‘å®šå‡½æ•°è¿”å›å€¼ç±»å‹)
         std::shared_ptr<binder::CmdOptionBindT<_R, _R (*)(callback_param, _Arg0, _Arg1), binder::CmdOptionBindParamList2<_BArg0, _BArg1> > >
             BindCmd(const std::string strCmd, _R (*fn)(callback_param, _Arg0, _Arg1), _BArg0 arg0, _BArg1 arg1)
         {
@@ -606,7 +613,7 @@ namespace copt
             return pFun;
         }
 
-        template<typename _Arg0, typename _Arg1, typename _Arg2, typename _BArg0, typename _BArg1, typename _BArg2, typename _R>  // °ó¶¨º¯Êı(_Arg:²ÎÊı[×¢ÒâÖµµÄ¸´ÖÆ·¢ÉúÔÚ±¾º¯ÊıÖ´ĞĞÊ±], _R: °ó¶¨º¯Êı·µ»ØÖµÀàĞÍ)
+        template<typename _Arg0, typename _Arg1, typename _Arg2, typename _BArg0, typename _BArg1, typename _BArg2, typename _R>  // ç»‘å®šå‡½æ•°(_Arg:å‚æ•°[æ³¨æ„å€¼çš„å¤åˆ¶å‘ç”Ÿåœ¨æœ¬å‡½æ•°æ‰§è¡Œæ—¶], _R: ç»‘å®šå‡½æ•°è¿”å›å€¼ç±»å‹)
         std::shared_ptr<binder::CmdOptionBindT<_R, _R (*)(callback_param, _Arg0, _Arg1, _Arg2), binder::CmdOptionBindParamList3<_BArg0, _BArg1, _BArg2> > >
             BindCmd(const std::string strCmd, _R (*fn)(callback_param, _Arg0, _Arg1, _Arg2), _BArg0 arg0, _BArg1 arg1, _BArg2 arg2)
         {
@@ -627,15 +634,15 @@ namespace copt
         }
 
         /**
-         * °ó¶¨º¯Êı¶ÔÏó(×ÔÊÊÓ¦)
-         * ×¢Òâ£ºÄ¬ÈÏ»á¸´ÖÆº¯Êı¶ÔÏó
+         * ç»‘å®šå‡½æ•°å¯¹è±¡(è‡ªé€‚åº”)
+         * æ³¨æ„ï¼šé»˜è®¤ä¼šå¤åˆ¶å‡½æ•°å¯¹è±¡
          *
-         * BindCmd: °ó¶¨²ÎÊı[×¢ÒâÖµµÄ¸´ÖÆ·¢ÉúÔÚ±¾º¯ÊıÖ´ĞĞÊ±]
+         * BindCmd: ç»‘å®šå‚æ•°[æ³¨æ„å€¼çš„å¤åˆ¶å‘ç”Ÿåœ¨æœ¬å‡½æ•°æ‰§è¡Œæ—¶]
          * example:
-         *      *.BindCmd(ÃüÁîÃû³Æ, º¯Êı¶ÔÏó, ²ÎÊı)                           // Ä¬ÈÏÀàĞÍÍÆ¶ÏÊÇ´«Öµ¶ø·ÇÒıÓÃ
-         *      *.BindCmd<´«ÈëÀàĞÍ>(ÃüÁîÃû³Æ, º¯ÊıÖ¸Õë, ²ÎÊı)
+         *      *.BindCmd(å‘½ä»¤åç§°, å‡½æ•°å¯¹è±¡, å‚æ•°)                           // é»˜è®¤ç±»å‹æ¨æ–­æ˜¯ä¼ å€¼è€Œéå¼•ç”¨
+         *      *.BindCmd<ä¼ å…¥ç±»å‹>(å‘½ä»¤åç§°, å‡½æ•°æŒ‡é’ˆ, å‚æ•°)
          */
-        template<typename _F>   // °ó¶¨º¯Êı(_F: º¯Êı¶ÔÏóÀàĞÍ)
+        template<typename _F>   // ç»‘å®šå‡½æ•°(_F: å‡½æ•°å¯¹è±¡ç±»å‹)
         std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, binder::CmdOptionBindParamList0> > 
             BindCmd(const std::string strCmd, _F fn)
         {
@@ -654,7 +661,7 @@ namespace copt
             return pFun;
         }
 
-        template<typename _Arg0, typename _F>  // °ó¶¨º¯Êı(_Arg:²ÎÊı[×¢ÒâÖµµÄ¸´ÖÆ·¢ÉúÔÚ±¾º¯ÊıÖ´ĞĞÊ±], _R: °ó¶¨º¯Êı·µ»ØÖµÀàĞÍ)
+        template<typename _Arg0, typename _F>  // ç»‘å®šå‡½æ•°(_Arg:å‚æ•°[æ³¨æ„å€¼çš„å¤åˆ¶å‘ç”Ÿåœ¨æœ¬å‡½æ•°æ‰§è¡Œæ—¶], _R: ç»‘å®šå‡½æ•°è¿”å›å€¼ç±»å‹)
         std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, binder::CmdOptionBindParamList1<_Arg0> > >
             BindCmd(const std::string strCmd, _F fn, _Arg0 arg0)
         {
@@ -673,7 +680,7 @@ namespace copt
             return pFun;
         }
 
-        template<typename _Arg0, typename _Arg1, typename _F>  // °ó¶¨º¯Êı(_Arg:²ÎÊı[×¢ÒâÖµµÄ¸´ÖÆ·¢ÉúÔÚ±¾º¯ÊıÖ´ĞĞÊ±], _R: °ó¶¨º¯Êı·µ»ØÖµÀàĞÍ)
+        template<typename _Arg0, typename _Arg1, typename _F>  // ç»‘å®šå‡½æ•°(_Arg:å‚æ•°[æ³¨æ„å€¼çš„å¤åˆ¶å‘ç”Ÿåœ¨æœ¬å‡½æ•°æ‰§è¡Œæ—¶], _R: ç»‘å®šå‡½æ•°è¿”å›å€¼ç±»å‹)
         std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, binder::CmdOptionBindParamList2<_Arg0, _Arg1> > >
             BindCmd(const std::string strCmd, _F fn, _Arg0 arg0, _Arg1 arg1)
         {
@@ -692,7 +699,7 @@ namespace copt
             return pFun;
         }
 
-        template<typename _Arg0, typename _Arg1, typename _Arg2, typename _F>  // °ó¶¨º¯Êı(_Arg:²ÎÊı[×¢ÒâÖµµÄ¸´ÖÆ·¢ÉúÔÚ±¾º¯ÊıÖ´ĞĞÊ±], _R: °ó¶¨º¯Êı·µ»ØÖµÀàĞÍ)
+        template<typename _Arg0, typename _Arg1, typename _Arg2, typename _F>  // ç»‘å®šå‡½æ•°(_Arg:å‚æ•°[æ³¨æ„å€¼çš„å¤åˆ¶å‘ç”Ÿåœ¨æœ¬å‡½æ•°æ‰§è¡Œæ—¶], _R: ç»‘å®šå‡½æ•°è¿”å›å€¼ç±»å‹)
         std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, binder::CmdOptionBindParamList3<_Arg0, _Arg1, _Arg2> > >
             BindCmd(const std::string strCmd, _F fn, _Arg0 arg0, _Arg1 arg1, _Arg2 arg2)
         {
@@ -713,12 +720,12 @@ namespace copt
 
 
         /**
-         * °ó¶¨Ö¸Áî(Í¨ÓÃ)
-         * BindCmd: °ó¶¨²ÎÊı
+         * ç»‘å®šæŒ‡ä»¤(é€šç”¨)
+         * BindCmd: ç»‘å®šå‚æ•°
          * example:
-         *      *.BindCmd(ÃüÁîÃû³Æ, binder::CmdOptionBindBase ½á¹¹ÖÇÄÜÖ¸Õë)
-         *      *.BindCmd(ÃüÁîÃû³Æ, CmdOptionBind<TCmdStr> ½á¹¹ÒıÓÃ)
-         * ÍÆ¼öÊ¹ÓÃÉÏÒ»ÖÖ£¬¿ÉÒÔ¼õÉÙÒ»´Î½á¹¹¸´ÖÆ
+         *      *.BindCmd(å‘½ä»¤åç§°, binder::CmdOptionBindBase ç»“æ„æ™ºèƒ½æŒ‡é’ˆ)
+         *      *.BindCmd(å‘½ä»¤åç§°, CmdOptionBind<TCmdStr> ç»“æ„å¼•ç”¨)
+         * æ¨èä½¿ç”¨ä¸Šä¸€ç§ï¼Œå¯ä»¥å‡å°‘ä¸€æ¬¡ç»“æ„å¤åˆ¶
          */
         std::shared_ptr<binder::CmdOptionBindBase> BindChildCmd(const std::string strCmd, std::shared_ptr<binder::CmdOptionBindBase> pBase)
         {
@@ -748,7 +755,7 @@ namespace copt
     template<typename Ty>
     short CmdOptionBind<Ty>::m_strMapValue[256] = {0};
 
-    // ÀàĞÍÖØ¶¨Òå
+    // ç±»å‹é‡å®šä¹‰
     typedef CmdOptionBind<std::string> CmdOption;
     typedef CmdOptionBind<CmdOptionCIString> CmdOptionCI;
 }
