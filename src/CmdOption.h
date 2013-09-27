@@ -90,7 +90,7 @@ namespace copt
                     if (stParams.GetParamsNumber() % 2)
                         stParams.Add("");
 
-                    stParams.AppendCmd(strCmd.c_str(), std::shared_ptr<binder::CmdOptionBindBase>());
+                    stParams.AppendCmd(strCmd.c_str(), stIter->second);
                     // 错误附加内容(错误内容)
                     stParams.Add("@ErrorMsg");
                     stParams.Add("Command Invalid");
