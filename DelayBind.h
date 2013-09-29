@@ -10,7 +10,7 @@
 #include <cstdio>
 #include "CmdOption.h"
 
-// ÑÓ³Ù°ó¶¨³õÊ¼»¯
+// å»¶è¿Ÿç»‘å®šåˆå§‹åŒ–
 bool delay_print(copt::callback_param par) {
     if (par.GetParamsNumber() > 0)
         puts(par[0]->AsString());
@@ -23,17 +23,17 @@ void delay_init(copt::callback_param par, copt::CmdOption* stChild) {
 }
 
 void delay_bind() {
-    puts("ÑÓ³Ù³õÊ¼»¯×Ó°ó¶¨");
-    copt::CmdOption f;
-    std::shared_ptr<copt::CmdOption> pc = std::shared_ptr<copt::CmdOption>(new copt::CmdOption());
-    pc->BindCmd("@OnCallFunc", delay_init, pc.get());   // ÉèÖÃ³õÊ¼»¯º¯Êı
-    // ×¢ÒâÕâÀï²»ÄÜ´«Èë*pc
-    // ÒòÎªÈç¹û´«ÈëÒıÓÃ£¬×ÓCmdOption½á¹¹»á±»¸´ÖÆ£¬È»ºó×÷ÎªfµÄ×ÓÃüÁî£¬¶ø´«Èë²¢ÑÓ³Ù°ó¶¨µÄÊÇpcµÄÖ¸Õë
-    f.BindChildCmd("-c, --child", pc);                       
+    puts("å»¶è¿Ÿåˆå§‹åŒ–å­ç»‘å®š");
+    copt::CmdOption::ptr_type f = copt::CmdOption::Create();
+    std::shared_ptr<copt::CmdOption> pc = copt::CmdOption::Create();
+    pc->BindCmd("@OnCallFunc", delay_init, pc.get());   // è®¾ç½®åˆå§‹åŒ–å‡½æ•°
+    // æ³¨æ„è¿™é‡Œä¸èƒ½ä¼ å…¥*pc
+    // å› ä¸ºå¦‚æœä¼ å…¥å¼•ç”¨ï¼Œå­CmdOptionç»“æ„ä¼šè¢«å¤åˆ¶ï¼Œç„¶åä½œä¸ºfçš„å­å‘½ä»¤ï¼Œè€Œä¼ å…¥å¹¶å»¶è¿Ÿç»‘å®šçš„æ˜¯pcçš„æŒ‡é’ˆ
+    f->BindChildCmd("-c, --child", pc);                       
 
-    f.Start("-c a b c -p \"Delay Init Child Option With \\\"delay_print\\\".\"");
+    f->Start("-c a b c -p \"Delay Init Child Option With \\\"delay_print\\\".\"");
 
-    puts("ÑÓ³Ù³õÊ¼»¯×Ó°ó¶¨ ²âÊÔÍê³É\n");
+    puts("å»¶è¿Ÿåˆå§‹åŒ–å­ç»‘å®š æµ‹è¯•å®Œæˆ\n");
 }
 
 #endif
