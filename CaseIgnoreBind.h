@@ -16,12 +16,12 @@ void bind_ci_cmd_print(copt::callback_param par)
 
 void bind_ci_cmd_print2(copt::callback_param par, double d)
 {
-    printf("ci: Free Fun B2 Params Num: %d, d => %lf\n", par.GetParamsNumber(), d);
+    printf("ci: Free Fun B2 Params Num: %d, d => %lf\n", static_cast<int>(par.GetParamsNumber()), d);
 }
 
 void bind_ci_cmd_print3(copt::callback_param par, double d, int i)
 {
-    printf("ci: Free Fun B3 Params Num: %d, i => %d, d => %lf\n", par.GetParamsNumber(), i, d);
+    printf("ci: Free Fun B3 Params Num: %d, i => %d, d => %lf\n", static_cast<int>(par.GetParamsNumber()), i, d);
 }
 
 void bind_ci_cmd_init(){
