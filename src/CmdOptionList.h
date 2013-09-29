@@ -35,6 +35,8 @@ namespace copt
         class CmdOptionBindBase: public std::enable_shared_from_this<CmdOptionBindBase>
         {
         protected:
+            static const char* ROOT_NODE_CMD;
+
             std::string m_strHelpMsg;
             virtual ~CmdOptionBindBase(){}
         public:
