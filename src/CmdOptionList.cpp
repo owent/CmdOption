@@ -12,17 +12,19 @@
 
 namespace copt
 {
+    const char* binder::CmdOptionBindBase::ROOT_NODE_CMD = "@Root";
+
     CmdOptionList::CmdOptionList(): m_pExtParam(NULL)
     {
     }
 
-    CmdOptionList::CmdOptionList(int argv, const char* argc[])
+    CmdOptionList::CmdOptionList(int argv, const char* argc[]): m_pExtParam(NULL)
     {
         for (int i = 0; i < argv; ++ i)
             m_stKeys.push_back(value_type(new CmdOptionValue(argc[i])));
     }
 
-    CmdOptionList::CmdOptionList(const std::vector<std::string>& stCmds)
+    CmdOptionList::CmdOptionList(const std::vector<std::string>& stCmds): m_pExtParam(NULL)
     {
         std::vector<std::string>::size_type uSize = stCmds.size();
         for (std::vector<std::string>::size_type i = 0; i < uSize; ++ i)
