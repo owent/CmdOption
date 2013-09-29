@@ -26,15 +26,15 @@ void bind_ci_cmd_print3(copt::callback_param par, double d, int i)
 
 void bind_ci_cmd_init(){
 
-    copt::CmdOptionCI stOpt;
+    copt::CmdOptionCI::ptr_type stOpt = copt::CmdOptionCI::Create();
 
-    stOpt.BindHelpCmd("-h, --help")->SetHelpMsg("Help (CI):");
-    stOpt.BindCmd("p, print", bind_ci_cmd_print);
+    stOpt->BindHelpCmd("-h, --help")->SetHelpMsg("Help (CI):");
+    stOpt->BindCmd("p, print", bind_ci_cmd_print);
 
-    stOpt.BindCmd("pd, printd", bind_ci_cmd_print2, 1.5);
-    stOpt.BindCmd("pdi, printdi", bind_ci_cmd_print3, 3.5, 105)->SetHelpMsg("Cmd Ignore Case printdi");
+    stOpt->BindCmd("pd, printd", bind_ci_cmd_print2, 1.5);
+    stOpt->BindCmd("pdi, printdi", bind_ci_cmd_print3, 3.5, 105)->SetHelpMsg("Cmd Ignore Case printdi");
 
-    stOpt.Start("-H 1 2 3 5 pDi 4 5 p PD"); 
+    stOpt->Start("-H 1 2 3 5 pDi 4 5 p PD"); 
 }
 
 #endif
