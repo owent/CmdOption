@@ -18,7 +18,7 @@ bool delay_print(copt::callback_param par) {
 }
 
 void delay_init(copt::callback_param par, copt::CmdOption* stChild) {
-    printf("Delay Init Params Num: %d\n", par.GetParamsNumber());
+    printf("Delay Init Params Num: %d\n", static_cast<int>(par.GetParamsNumber()));
     stChild->BindCmd("-p, --print", delay_print);
 }
 
