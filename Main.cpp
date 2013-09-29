@@ -14,9 +14,9 @@ class foo {
 public:
     void print_t(copt::callback_param par, std::string& str)
     {
-        printf("sizeof(float) => %d\n", sizeof(float));
-        printf("sizeof(double) => %d\n", sizeof(double));
-        printf("sizeof(long double) => %d\n", sizeof(long double));
+        printf("sizeof(float) => %d\n", static_cast<int>(sizeof(float)));
+        printf("sizeof(double) => %d\n", static_cast<int>(sizeof(double)));
+        printf("sizeof(long double) => %d\n", static_cast<int>(sizeof(long double)));
 
         str = "Hello World!";
     }
@@ -28,12 +28,12 @@ public:
 
     void print_t2(copt::callback_param par, int i)
     {
-        printf("Mem Fun B2 Params Num: %d, i => %d\n", par.GetParamsNumber(), i);
+        printf("Mem Fun B2 Params Num: %d, i => %d\n", static_cast<int>(par.GetParamsNumber()), i);
     }
 
     void print_t3(copt::callback_param par, int i, double d)
     {
-        printf("Mem Fun B3 Params Num: %d, i => %d, d => %lf\n", par.GetParamsNumber(), i, d);
+        printf("Mem Fun B3 Params Num: %d, i => %d, d => %lf\n", static_cast<int>(par.GetParamsNumber()), i, d);
     }
 };
 
@@ -46,9 +46,9 @@ class foo2: public foo {
 
 void print(copt::callback_param par, std::string* str)
 {
-    printf("sizeof(short) => %d\n", sizeof(short));
-    printf("sizeof(int) => %d\n", sizeof(int));
-    printf("sizeof(long) => %d\n", sizeof(long));
+    printf("sizeof(short) => %d\n", static_cast<int>(sizeof(short)));
+    printf("sizeof(int) => %d\n", static_cast<int>(sizeof(int)));
+    printf("sizeof(long) => %d\n", static_cast<int>(sizeof(long)));
 
     (*str) = par.Get("par1")->AsString();
 }
@@ -60,12 +60,12 @@ void print(copt::callback_param par)
 
 void print2(copt::callback_param par, double d)
 {
-    printf("Free Fun B2 Params Num: %d, d => %lf\n", par.GetParamsNumber(), d);
+    printf("Free Fun B2 Params Num: %d, d => %lf\n", static_cast<int>(par.GetParamsNumber()), d);
 }
 
 void print3(copt::callback_param par, double d, int i)
 {
-    printf("Free Fun B3 Params Num: %d, i => %d, d => %lf\n", par.GetParamsNumber(), i, d);
+    printf("Free Fun B3 Params Num: %d, i => %d, d => %lf\n", static_cast<int>(par.GetParamsNumber()), i, d);
 }
 
 
