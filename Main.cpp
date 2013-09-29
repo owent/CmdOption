@@ -2,12 +2,12 @@
 #include <cstdio>
 #include "CmdOption.h"
 
-// ¸ß¼¶ÓÃ·¨Ê¾ÀıÔ´Âë
-// ÑÓ³Ù×Ó°ó¶¨
+// é«˜çº§ç”¨æ³•ç¤ºä¾‹æºç 
+// å»¶è¿Ÿå­ç»‘å®š
 #include "DelayBind.h"
-// °ó¶¨·Âº¯Êı
+// ç»‘å®šä»¿å‡½æ•°
 #include "BindObj.h"
-// ÃüÁîºöÂÔ´óĞ¡Ğ´
+// å‘½ä»¤å¿½ç•¥å¤§å°å†™
 #include "CaseIgnoreBind.h"
 
 class foo {
@@ -81,73 +81,74 @@ void onError(copt::callback_param par) {
 
 int main() {
 
-    copt::CmdOption co, cco;
+    copt::CmdOption::ptr_type co = copt::CmdOption::Create();
+    copt::CmdOption::ptr_type cco = copt::CmdOption::Create();
     
     foo f, *pf = new foo2();
     std::string str;
     
-    // °ó¶¨´íÎó´¦Àíº¯Êı
-    co.BindCmd("@OnError", onError);
+    // ç»‘å®šé”™è¯¯å¤„ç†å‡½æ•°
+    co->BindCmd("@OnError", onError);
 
-    // ´ø²ÎÊıÀàº¯Êı°ó¶¨£¨²ÎÊıÎªÒıÓÃ£©
-    co.BindCmd("-bt1, --bind_class_func_param", &foo::print_t, *pf, std::ref(str))->SetHelpMsg("-bt1, --bind_class_func_param    ´ø²ÎÊıÀà°ó¶¨");
-    // ´ø²ÎÊıÀàº¯Êı°ó¶¨£¨¶à¸ö²ÎÊı£©
-    co.BindCmd("-bt2, --bind_class_func_param2", &foo::print_t2, *pf, 1011);
-    co.BindCmd("-bt3, --bind_class_func_param3", &foo::print_t3, *pf, 1013, 10.13);
-    // ÎŞ²ÎÊıÀàº¯Êı°ó¶¨
-    co.BindCmd("-bt, --bind_class_func", &foo::print, f)->SetHelpMsg("-bt, --bind_class_func    ÎŞ²ÎÊıÀà°ó¶¨");
-    // ´ø²ÎÊıÆÕÍ¨º¯Êı°ó¶¨(×Ô¶¯ÀàĞÍÍÆ¶Ï)
-    cco.BindCmd("-bf1, --bind_func_param1", print, &str)->SetHelpMsg("-bf1, --bind_func_param    ´ø²ÎÊıº¯Êı°ó¶¨");
-    cco.BindCmd("-bf2, --bind_func_param2", print2, 20.11);
-    cco.BindCmd("-bf3, --bind_func_param3", print3, 20.11, 2013);
+    // å¸¦å‚æ•°ç±»å‡½æ•°ç»‘å®šï¼ˆå‚æ•°ä¸ºå¼•ç”¨ï¼‰
+    co->BindCmd("-bt1, --bind_class_func_param", &foo::print_t, *pf, std::ref(str))->SetHelpMsg("-bt1, --bind_class_func_param    å¸¦å‚æ•°ç±»ç»‘å®š");
+    // å¸¦å‚æ•°ç±»å‡½æ•°ç»‘å®šï¼ˆå¤šä¸ªå‚æ•°ï¼‰
+    co->BindCmd("-bt2, --bind_class_func_param2", &foo::print_t2, *pf, 1011);
+    co->BindCmd("-bt3, --bind_class_func_param3", &foo::print_t3, *pf, 1013, 10.13);
+    // æ— å‚æ•°ç±»å‡½æ•°ç»‘å®š
+    co->BindCmd("-bt, --bind_class_func", &foo::print, f)->SetHelpMsg("-bt, --bind_class_func    æ— å‚æ•°ç±»ç»‘å®š");
+    // å¸¦å‚æ•°æ™®é€šå‡½æ•°ç»‘å®š(è‡ªåŠ¨ç±»å‹æ¨æ–­)
+    cco->BindCmd("-bf1, --bind_func_param1", print, &str)->SetHelpMsg("-bf1, --bind_func_param    å¸¦å‚æ•°å‡½æ•°ç»‘å®š");
+    cco->BindCmd("-bf2, --bind_func_param2", print2, 20.11);
+    cco->BindCmd("-bf3, --bind_func_param3", print3, 20.11, 2013);
 
-    // ÎŞ²ÎÊıÆÕÍ¨º¯Êı°ó¶¨
-    cco.BindCmd("-bf, --bind_func", print)->SetHelpMsg("-bf, --bind_func    ÎŞ²ÎÊıº¯Êı°ó¶¨");
-    // ¸´ÔÓ¶àÖ¸Áî°ó¶¨
-    co.BindCmd("wo  ;le  , ge, cha,de", complexBindFunc, 100);
-    // °ó¶¨×Ó°ó¶¨¶ÔÏó
-    co.BindChildCmd("-c, --child", cco)->SetHelpMsg("-c, --child    ");
-    // °ó¶¨¶àÖ¸ÁîµÄÄ¬ÈÏÖ´ĞĞº¯Êı
-    co.BindCmd("@OnDefault", print);
+    // æ— å‚æ•°æ™®é€šå‡½æ•°ç»‘å®š
+    cco->BindCmd("-bf, --bind_func", print)->SetHelpMsg("-bf, --bind_func    æ— å‚æ•°å‡½æ•°ç»‘å®š");
+    // å¤æ‚å¤šæŒ‡ä»¤ç»‘å®š
+    co->BindCmd("wo  ;le  , ge, cha,de", complexBindFunc, 100);
+    // ç»‘å®šå­ç»‘å®šå¯¹è±¡
+    co->BindChildCmd("-c, --child", cco)->SetHelpMsg("-c, --child    ");
+    // ç»‘å®šå¤šæŒ‡ä»¤çš„é»˜è®¤æ‰§è¡Œå‡½æ•°
+    co->BindCmd("@OnDefault", print);
 
-    // µ¥Ö¸ÁîÆô¶¯²âÊÔ
-    co.Start("-c lala def -bf1 par1 par2 par3 -bf2 -bf3 fp1");
-    co.Start("-bt btpar1 -bt1 with one param --bind_class_func_param2 p1 p2 p3 -bt3 p4");
+    // å•æŒ‡ä»¤å¯åŠ¨æµ‹è¯•
+    co->Start("-c lala def -bf1 par1 par2 par3 -bf2 -bf3 fp1");
+    co->Start("-bt btpar1 -bt1 with one param --bind_class_func_param2 p1 p2 p3 -bt3 p4");
 
-    // ¶àÖ¸ÁîÆô¶¯²âÊÔ
+    // å¤šæŒ‡ä»¤å¯åŠ¨æµ‹è¯•
     const char* strCmds[] = {"path", "par1", "par2", "wo", "le", "ge", "cha"};
-    co.Start(7, strCmds);
+    co->Start(7, strCmds);
     puts(str.c_str());
 
-    // ´íÎó´¦Àí²âÊÔ
-    co.Start("do_nothing");
-    puts("°ó¶¨²âÊÔÍê±Ï\n");
+    // é”™è¯¯å¤„ç†æµ‹è¯•
+    co->Start("do_nothing");
+    puts("ç»‘å®šæµ‹è¯•å®Œæ¯•\n");
 
-    // Ìí¼Ó°ïÖúĞÅÏ¢²âÊÔ
-    co.GetBindedCmd("wo")->AddHelpMsg("wo, le, ge, cha, de")->AddHelpMsg("   ¸´ÔÓÖ¸Áî°ó¶¨");
-    std::shared_ptr<std::vector<const char*> > cmds = co.GetCmdNames();
+    // æ·»åŠ å¸®åŠ©ä¿¡æ¯æµ‹è¯•
+    co->GetBindedCmd("wo")->AddHelpMsg("wo, le, ge, cha, de")->AddHelpMsg("   å¤æ‚æŒ‡ä»¤ç»‘å®š");
+    std::shared_ptr<std::vector<const char*> > cmds = co->GetCmdNames();
     printf("CMDS: ");
     for (unsigned int i = 0; i < cmds->size(); ++i) {
         printf(" %s;", (*cmds)[i]);
     }
     puts("");
-    co.BindHelpCmd("h, help")->SetHelpMsg("h, help      °ïÖúĞÅÏ¢");
-    co.Start("help");
-    puts("Ä¬ÈÏ°ïÖúº¯Êı²âÊÔÍê³É\n");
+    co->BindHelpCmd("h, help")->SetHelpMsg("h, help      å¸®åŠ©ä¿¡æ¯");
+    co->Start("help");
+    puts("é»˜è®¤å¸®åŠ©å‡½æ•°æµ‹è¯•å®Œæˆ\n");
 
 
-    // ¸ß¼¶ÓÃ·¨ Àı³Ìº¯Êı
+    // é«˜çº§ç”¨æ³• ä¾‹ç¨‹å‡½æ•°
 
-    // ÑÓ³Ù°ó¶¨³õÊ¼»¯
+    // å»¶è¿Ÿç»‘å®šåˆå§‹åŒ–
     delay_bind();
 
-    // °ó¶¨º¯Êı¶ÔÏó
+    // ç»‘å®šå‡½æ•°å¯¹è±¡
     bind_obj_init();
 
-    // ÃüÁîºöÂÔ´óĞ¡Ğ´
+    // å‘½ä»¤å¿½ç•¥å¤§å°å†™
     bind_ci_cmd_init();
 
-    // »ØÊÕ×ÊÔ´
+    // å›æ”¶èµ„æº
     delete pf;
 
     return 0;
