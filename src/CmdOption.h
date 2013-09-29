@@ -8,9 +8,9 @@
 /**
  * CmdOptionBind<TCmdStr>.h
  * 
- *  Version: 1.3.3
+ *  Version: 1.4.0
  *  Created on: 2011-12-29
- *  Last edit : 2013-09-25
+ *  Last edit : 2013-09-29
  *      Author: OWenT
  *
  * 应用程序命令处理
@@ -77,6 +77,12 @@ namespace copt
         {
             typename funmap_type::const_iterator stIter = m_stCallbackFuns.find(strCmd);
 
+            // 如果是顶层调用则添加根指令调用栈
+            if (stParams.GetCmdArray().empty())
+            {
+                stParams.AppendCmd(ROOT_NODE_CMD, std::const_pointer_cast<binder::CmdOptionBindBase>(shared_from_this()));
+            }
+
             if (stIter == m_stCallbackFuns.end())
             {
                 // 内定命令不报“找不到指令”错
@@ -90,14 +96,17 @@ namespace copt
                     if (stParams.GetParamsNumber() % 2)
                         stParams.Add("");
 
-                    stParams.AppendCmd(strCmd.c_str(), stIter->second);
                     // 错误附加内容(错误内容)
                     stParams.Add("@ErrorMsg");
                     stParams.Add("Command Invalid");
+                    stParams.AppendCmd(strCmd.c_str(), stIter->second); // 添加当前指令调用栈
+
                     (*stIter->second)(stParams);
                 }
                 return;
             }
+
+            // 添加当前指令调用栈
             stParams.AppendCmd(strCmd.c_str(), stIter->second);
             (*stIter->second)(stParams);
         }
@@ -190,7 +199,7 @@ namespace copt
             puts(GetHelpMsg().c_str());
         }
 
-    public:
+    private:
         /**
          * 构造函数
          */
@@ -210,6 +219,13 @@ namespace copt
             // 指令分隔符
             m_strMapValue[(int)' '] |= CMDSPLIT;
             m_strMapValue[(int)','] = m_strMapValue[(int)';'] = CMDSPLIT;
+        }
+
+    public:
+        typedef std::shared_ptr<CmdOptionBind> ptr_type;
+        static ptr_type Create()
+        {
+            return ptr_type(new CmdOptionBind());
         }
 
         /**
@@ -314,6 +330,7 @@ namespace copt
         {
             CmdOptionList stList(argv, argc);
             stList.SetExtParam(pExtParam);
+
             Start(stList, bSingleCmd);
         }
 
@@ -327,6 +344,7 @@ namespace copt
         {
             CmdOptionList stList(stCmds);
             stList.SetExtParam(pExtParam);
+
             Start(stList, bSingleCmd);
         }
         
