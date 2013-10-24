@@ -8,9 +8,9 @@
 /**
  * CmdOptionBind<TCmdStr>.h
  * 
- *  Version: 1.4.0
+ *  Version: 1.4.1
  *  Created on: 2011-12-29
- *  Last edit : 2013-09-29
+ *  Last edit : 2013-10-24
  *      Author: OWenT
  *
  * 应用程序命令处理
@@ -64,6 +64,7 @@ namespace copt
     {
     protected:
         static short m_strMapValue[256]; // 记录不同字符的映射关系
+        static char m_strTransValue[256]; // 记录特殊转义字符
 
         typedef std::map<TCmdStr, std::shared_ptr<binder::CmdOptionBindBase> > funmap_type;
         funmap_type m_stCallbackFuns; // 记录命令的映射函数
@@ -140,13 +141,17 @@ namespace copt
 
                     while (*strBegin && *strBegin != cFlag)
                     {
+                        char cCurByte = *strBegin;
                         if (m_strMapValue[(int)*strBegin] & TRANSLATE)
                         {
                             if (*(strBegin + 1))
+                            {
                                 ++ strBegin;
+                                cCurByte = m_strTransValue[(int)*strBegin];
+                            }
                         }
 
-                        strVal += *strBegin;
+                        strVal += cCurByte;
                         ++ strBegin;
                     }
 
@@ -219,6 +224,22 @@ namespace copt
             // 指令分隔符
             m_strMapValue[(int)' '] |= CMDSPLIT;
             m_strMapValue[(int)','] = m_strMapValue[(int)';'] = CMDSPLIT;
+
+            // 转义字符设置
+            for (int i = 0; i < 256; ++ i)
+                m_strTransValue[i] = i;
+
+            m_strTransValue[(int)'0'] = '\0';
+            m_strTransValue[(int)'a'] = '\a';
+            m_strTransValue[(int)'b'] = '\b';
+            m_strTransValue[(int)'f'] = '\f';
+            m_strTransValue[(int)'r'] = '\r';
+            m_strTransValue[(int)'n'] = '\n';
+            m_strTransValue[(int)'t'] = '\t';
+            m_strTransValue[(int)'v'] = '\v';
+            m_strTransValue[(int)'\\'] = '\\';
+            m_strTransValue[(int)'\''] = '\'';
+            m_strTransValue[(int)'\"'] = '\"';
         }
 
     public:
@@ -772,6 +793,9 @@ namespace copt
 
     template<typename Ty>
     short CmdOptionBind<Ty>::m_strMapValue[256] = {0};
+
+    template<typename Ty>
+    char CmdOptionBind<Ty>::m_strTransValue[256] = {0};
 
     // 类型重定义
     typedef CmdOptionBind<std::string> CmdOption;
