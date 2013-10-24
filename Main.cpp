@@ -23,7 +23,11 @@ public:
 
     void print(copt::callback_param par)
     {
-        puts("do nothing!\n");
+        puts("bt func:");
+        for(copt::CmdOptionList::size_type i = 0; i < par.GetParamsNumber(); ++ i)
+        {
+            puts(par[i]->AsString());
+        }
     }
 
     void print_t2(copt::callback_param par, int i)
@@ -113,7 +117,7 @@ int main() {
 
     // 单指令启动测试
     co->Start("-c lala def -bf1 par1 par2 par3 -bf2 -bf3 fp1");
-    co->Start("-bt btpar1 -bt1 with one param --bind_class_func_param2 p1 p2 p3 -bt3 p4");
+    co->Start("-bt btpar1 \"test end of line\\r\\n\tanother line\"-bt1 with one param --bind_class_func_param2 p1 p2 p3 -bt3 p4");
 
     // 多指令启动测试
     const char* strCmds[] = {"path", "par1", "par2", "wo", "le", "ge", "cha"};
