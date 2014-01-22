@@ -1,4 +1,4 @@
-#ifndef _CMDOPTIONBINDTBASE_H_
+﻿#ifndef _CMDOPTIONBINDTBASE_H_
 #define _CMDOPTIONBINDTBASE_H_
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
@@ -15,6 +15,7 @@
  */
 
 #include "CmdOptionList.h"
+#include "CmdOptionBindParamList.h"
 
 namespace copt
 {
@@ -27,11 +28,11 @@ namespace copt
     // 绑定器集合
     namespace binder {
         // 函数、函数结构绑定器
-        template<class _R, class _F, class _PL> 
+        template<class _F, class _PL> 
         class CmdOptionBindT : public CmdOptionBindBase
         {
         protected:
-            _F m_fFuncObj;      // 函数结构
+            _F m_fFuncObj;       // 函数结构
             _PL m_stParamList;   // 参数列表结构
 
         public:
@@ -44,7 +45,6 @@ namespace copt
                 m_stParamList(m_fFuncObj, args, 0);
             }                      
         };
-
     }
 }
-#endif /* _CMDOPTIONBIND_H_ */
+#endif /* _CMDOPTIONBINDTBASE_H_ */

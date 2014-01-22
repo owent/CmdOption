@@ -1,0 +1,60 @@
+do nothing! - free func without parameter
+
+sizeof(short) => 2
+sizeof(int) => 4
+sizeof(long) => 8
+do nothing! - free func without parameter
+
+bt func:
+btpar1
+test end of line
+	another line
+sizeof(float) => 4
+sizeof(double) => 8
+sizeof(long double) => 16
+Mem Fun B2 Params Num: 3, i => 1011
+Mem Fun B3 Params Num: 1, i => 1013, d => 10.130000
+do nothing! - free func without parameter
+
+100
+100
+100
+100
+Hello World!
+do nothing! - free func without parameter
+
+绑定测试完毕
+
+CMDS:  --bind_class_func; --bind_class_func_param; --bind_class_func_param2; --bind_class_func_param3; --child; -bt; -bt1; -bt2; -bt3; -c; @OnDefault; @OnError; cha; de; ge; le; wo;
+do nothing! - free func without parameter
+
+Help:
+-bt, --bind_class_func    无参数类绑定
+-bt1, --bind_class_func_param    带参数类绑定
+-c, --child    -bf, --bind_func    无参数函数绑定
+-c, --child    -bf1, --bind_func_param    带参数函数绑定
+-c, --child    
+-c, --child    
+wo, le, ge, cha, de   复杂指令绑定
+h, help      帮助信息
+默认帮助函数测试完成
+
+延迟初始化子绑定
+Delay Init Params Num: 5
+Delay Init Child Option With "delay_print".
+延迟初始化子绑定 测试完成
+
+绑定函数对象
+On Bind Obj Params: p1 p2 p3 m => 105
+On Bind Obj1 Params: test m => 205, a => 206
+On Bind Obj2 Params: m => 305, a => 306, b => 30.600000
+On Bind Obj3 Params: m => 405, a => 406, b => 40.600000, c => 1
+绑定函数对象 测试完成
+
+Help:
+Help (CI):
+Cmd Ignore Case printdi
+ci: Free Fun B3 Params Num: 2, i => 105, d => 3.500000
+ci: do nothing! - free func without parameter
+
+ci: Free Fun B2 Params Num: 0, d => 1.500000

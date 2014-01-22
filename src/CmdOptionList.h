@@ -1,4 +1,4 @@
-#ifndef _CMDOPTIONLIST_H_
+﻿#ifndef _CMDOPTIONLIST_H_
 #define _CMDOPTIONLIST_H_
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
@@ -118,9 +118,11 @@ namespace copt
 
         // 根据下标获取选项指针，如果不存在会出现运行时错误
         value_type Get(int iIndex) const;
+        value_type Get(size_type iIndex) const;
 
         // 操作符重载，功能和上面一样
         value_type operator[](int iIndex) const;
+        value_type operator[](size_type iIndex) const;
 
         // 获取参数数量
         size_type GetParamsNumber() const;

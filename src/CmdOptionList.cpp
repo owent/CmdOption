@@ -1,4 +1,4 @@
-/*
+﻿/*
 * CmdOptionList.cpp
 *
 *  Created on: 2011-12-29
@@ -108,8 +108,18 @@ namespace copt
         return m_stKeys[iIndex];
     }
 
+    CmdOptionList::value_type CmdOptionList::Get(size_type iIndex) const
+    {
+        return m_stKeys[iIndex];
+    }
+
     // 操作符重载，功能和上面一样
     CmdOptionList::value_type CmdOptionList::operator[](int iIndex) const
+    {
+        return m_stKeys[iIndex];
+    }
+
+    CmdOptionList::value_type CmdOptionList::operator[](size_type iIndex) const
     {
         return m_stKeys[iIndex];
     }

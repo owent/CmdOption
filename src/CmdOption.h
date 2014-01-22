@@ -1,4 +1,4 @@
-#ifndef _CMDOPTION_H_
+﻿#ifndef _CMDOPTION_H_
 #define _CMDOPTION_H_
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
@@ -8,13 +8,12 @@
 /**
  * CmdOptionBind<TCmdStr>.h
  * 
- *  Version: 1.4.1
+ *  Version: 1.5.0
  *  Created on: 2011-12-29
- *  Last edit : 2013-10-24
+ *  Last edit : 2014-01-22
  *      Author: OWenT
  *
  * 应用程序命令处理
- * 绑定规则和C++ 11不同，C++ 11的类成员绑定是复制类，而这里是引用
  * 注意: 除了类绑定的目标类外，所有默认的函数推断均是传值方式引入
  *      并且数值的复制在执行BindCmd时，如果需要引用需要显式指定函数类型
  *      注意默认推导不支持隐式转换(即对double和int是默认推导，但float、short、long等需要指明参数类型)
@@ -31,8 +30,8 @@
 
 // 载入绑定器
 #include "CmdOptionBind.h"
-
 #include "CmdOptionString.h"
+#include "CmdOptionBindTBase.h"
 
 #include "ref.h"
 
@@ -295,7 +294,7 @@ namespace copt
          */
         void Start(callback_param stArgs, bool bSingleCmd = false) const
         {
-            int argv = stArgs.GetParamsNumber();
+            int argv = static_cast<int>(stArgs.GetParamsNumber());
             CmdOptionList stCmdArgs;
             TCmdStr strCmd = bSingleCmd? "@OnError": "@OnDefault";
             for (int i = -1; i < argv; )
@@ -423,10 +422,14 @@ namespace copt
          * 绑定默认帮助函数
          * @param strHelpCmd 帮助命令名称
          */
-        inline std::shared_ptr< binder::CmdOptionBindT<void, void (CmdOptionBind<TCmdStr>::*)(callback_param), binder::CmdOptionBindMFParamList0<CmdOptionBind<TCmdStr> > > > 
+        inline std::shared_ptr< binder::CmdOptionBindT<
+            typename binder::MaybeWrapMemberPointer<
+                void (CmdOptionBind<TCmdStr>::*) (callback_param)>::caller_type,
+            binder::CmdOptionBindParamList1< CmdOptionBind<TCmdStr>* >
+        > > 
             BindHelpCmd(const char* strHelpCmd)
         {
-            return BindCmd(strHelpCmd, &CmdOptionBind<TCmdStr>::onHelp, *(this));
+            return BindCmd(strHelpCmd, &CmdOptionBind<TCmdStr>::onHelp, this);
         }
 
         /**
@@ -483,196 +486,6 @@ namespace copt
          */
 
         /**
-         * 绑定类成员函数（无参数）
-         * example:
-         *      *.BindCmd(命令名称, 类成员函数指针, 类)
-         *      *.BindCmd<类名>(命令名称, 类成员函数指针, 类)
-         *      *.BindCmd<类名, 类成员函数返回值类型>(命令名称, 类成员函数指针, 类)
-         */
-        template<typename _T, typename _R>  // 绑定类(_T:类)
-        std::shared_ptr<binder::CmdOptionBindT<_R, _R (_T::*)(callback_param), binder::CmdOptionBindMFParamList0<_T> > > 
-            BindCmd(const std::string strCmd, _R (_T::*fn)(callback_param), _T& t)
-        {
-            typedef _R (_T::*F)(callback_param); 
-            typedef binder::CmdOptionBindMFParamList0<_T> list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<_R, F, list_type> > obj_type;
-
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<_R, F, list_type>(fn, list_type(t)));
-
-            std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
-            for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex) 
-            {
-                TCmdStr strTCmd = TCmdStr(stCmds[iIndex].c_str(), stCmds[iIndex].size());
-                m_stCallbackFuns[strTCmd] = pFun;
-            }
-
-            return pFun;
-        }
-
-        /**
-         * 绑定类成员函数
-         * BindCmd: 绑定参数[注意值的复制发生在本函数执行时]
-         * example:
-         *      *.BindCmd(命令名称, 类成员函数指针, 类, 参数)                                     // 默认类型推断是传值而非引用
-         *      *.BindCmd<参数类型, 传入类型>(命令名称, 类成员函数指针, 类, 参数)
-         *      *.BindCmd<参数类型, 传入类型, 类名>(命令名称, 类成员函数指针, 类, 参数)
-         *      *.BindCmd<参数类型, 传入类型, 类名, 类成员函数返回值类型>(命令名称, 类成员函数指针, 类, 参数)
-         */
-        template<typename _Arg0, typename _BArg0, typename _T, typename _R>  // 绑定类(_T:类)
-        std::shared_ptr<binder::CmdOptionBindT<_R, _R (_T::*)(callback_param, _Arg0), binder::CmdOptionBindMFParamList1<_T, _BArg0> > > 
-            BindCmd(const std::string strCmd, _R (_T::*fn)(callback_param, _Arg0), _T& t, _BArg0 arg0)
-        {
-            typedef _R (_T::*F)(callback_param, _Arg0); 
-            typedef binder::CmdOptionBindMFParamList1<_T, _BArg0> list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<_R, F, list_type> > obj_type;
-
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<_R, F, list_type>(fn, list_type(t, arg0)));
-
-            std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
-            for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex)
-            {
-                TCmdStr strTCmd = TCmdStr(stCmds[iIndex].c_str(), stCmds[iIndex].size());
-                m_stCallbackFuns[strTCmd] = pFun;
-            }
-
-            return pFun;
-        }
-
-        template<typename _Arg0, typename _Arg1, typename _BArg0, typename _BArg1, typename _T, typename _R>  // 绑定类(_T:类)
-        std::shared_ptr<binder::CmdOptionBindT<_R, _R (_T::*)(callback_param, _Arg0, _Arg1), binder::CmdOptionBindMFParamList2<_T, _BArg0, _BArg1> > > 
-            BindCmd(const std::string strCmd, _R (_T::*fn)(callback_param, _Arg0, _Arg1), _T& t, _BArg0 arg0, _BArg1 arg1)
-        {
-            typedef _R (_T::*F)(callback_param, _Arg0, _Arg1); 
-            typedef binder::CmdOptionBindMFParamList2<_T, _BArg0, _BArg1> list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<_R, F, list_type> > obj_type;
-
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<_R, F, list_type>(fn, list_type(t, arg0, arg1)));
-
-            std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
-            for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex)
-            {
-                TCmdStr strTCmd = TCmdStr(stCmds[iIndex].c_str(), stCmds[iIndex].size());
-                m_stCallbackFuns[strTCmd] = pFun;
-            }
-
-            return pFun;
-        }
-
-        template<typename _Arg0, typename _Arg1, typename _Arg2, typename _BArg0, typename _BArg1, typename _BArg2, typename _T, typename _R>  // 绑定类(_T:类)
-        std::shared_ptr<binder::CmdOptionBindT<_R, _R (_T::*)(callback_param, _Arg0, _Arg1, _Arg2), binder::CmdOptionBindMFParamList3<_T, _BArg0, _BArg1, _BArg2> > > 
-            BindCmd(const std::string strCmd, _R (_T::*fn)(callback_param, _Arg0, _Arg1, _Arg2), _T& t, _BArg0 arg0, _BArg1 arg1, _BArg2 arg2)
-        {
-            typedef _R (_T::*F)(callback_param, _Arg0, _Arg1, _Arg2); 
-            typedef binder::CmdOptionBindMFParamList3<_T, _BArg0, _BArg1, _BArg2> list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<_R, F, list_type> > obj_type;
-
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<_R, F, list_type>(fn, list_type(t, arg0, arg1, arg2)));
-
-            std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
-            for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex)
-            {
-                TCmdStr strTCmd = TCmdStr(stCmds[iIndex].c_str(), stCmds[iIndex].size());
-                m_stCallbackFuns[strTCmd] = pFun;
-            }
-
-            return pFun;
-        }
-
-        /**
-         * 绑定普通函数（无参数）
-         * example:
-         *      *.BindCmd(命令名称, 函数指针)
-         *      *.BindCmd<函数返回值类型>(命令名称, 函数指针)
-         */
-        template<typename _R>   // 绑定函数(_R: 绑定函数返回值类型)
-        std::shared_ptr<binder::CmdOptionBindT<_R, _R (*)(callback_param), binder::CmdOptionBindParamList0> > 
-            BindCmd(const std::string strCmd, _R (*fn)(callback_param))
-        {
-            typedef _R (*F)(callback_param); 
-            typedef binder::CmdOptionBindParamList0 list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<_R, F, list_type> > obj_type;
-
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<_R, F, list_type>(fn, list_type()));
-
-            std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
-            for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex)
-            {
-                TCmdStr strTCmd = TCmdStr(stCmds[iIndex].c_str(), stCmds[iIndex].size());
-                m_stCallbackFuns[strTCmd] = pFun;
-            }
-
-            return pFun;
-        }
-
-        /**
-         * 绑定普通函数
-         * BindCmd: 绑定参数[注意值的复制发生在本函数执行时]
-         * example:
-         *      *.BindCmd(命令名称, 函数指针, 参数)                           // 默认类型推断是传值而非引用
-         *      *.BindCmd<参数类型, 传入类型>(命令名称, 函数指针, 参数)
-         *      *.BindCmd<参数类型, 传入类型, 函数返回值类型>(命令名称, 函数指针, 参数)
-         */
-        template<typename _Arg0, typename _BArg0, typename _R>  // 绑定函数(_Arg:参数[注意值的复制发生在本函数执行时], _R: 绑定函数返回值类型)
-        std::shared_ptr<binder::CmdOptionBindT<_R, _R (*)(callback_param, _Arg0), binder::CmdOptionBindParamList1<_BArg0> > >
-            BindCmd(const std::string strCmd, _R (*fn)(callback_param, _Arg0), _BArg0 arg0)
-        {
-            typedef _R (*F)(callback_param, _Arg0); 
-            typedef binder::CmdOptionBindParamList1<_BArg0> list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<_R, F, list_type> > obj_type;
-
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<_R, F, list_type>(fn, list_type(arg0)));
-
-            std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
-            for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex)
-            {
-                TCmdStr strTCmd = TCmdStr(stCmds[iIndex].c_str(), stCmds[iIndex].size());
-                m_stCallbackFuns[strTCmd] = pFun;
-            }
-
-            return pFun;
-        }
-
-        template<typename _Arg0, typename _Arg1, typename _BArg0, typename _BArg1, typename _R>  // 绑定函数(_Arg:参数[注意值的复制发生在本函数执行时], _R: 绑定函数返回值类型)
-        std::shared_ptr<binder::CmdOptionBindT<_R, _R (*)(callback_param, _Arg0, _Arg1), binder::CmdOptionBindParamList2<_BArg0, _BArg1> > >
-            BindCmd(const std::string strCmd, _R (*fn)(callback_param, _Arg0, _Arg1), _BArg0 arg0, _BArg1 arg1)
-        {
-            typedef _R (*F)(callback_param, _Arg0, _Arg1); 
-            typedef binder::CmdOptionBindParamList2<_BArg0, _BArg1> list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<_R, F, list_type> > obj_type;
-
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<_R, F, list_type>(fn, list_type(arg0, arg1)));
-
-            std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
-            for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex)
-            {
-                TCmdStr strTCmd = TCmdStr(stCmds[iIndex].c_str(), stCmds[iIndex].size());
-                m_stCallbackFuns[strTCmd] = pFun;
-            }
-
-            return pFun;
-        }
-
-        template<typename _Arg0, typename _Arg1, typename _Arg2, typename _BArg0, typename _BArg1, typename _BArg2, typename _R>  // 绑定函数(_Arg:参数[注意值的复制发生在本函数执行时], _R: 绑定函数返回值类型)
-        std::shared_ptr<binder::CmdOptionBindT<_R, _R (*)(callback_param, _Arg0, _Arg1, _Arg2), binder::CmdOptionBindParamList3<_BArg0, _BArg1, _BArg2> > >
-            BindCmd(const std::string strCmd, _R (*fn)(callback_param, _Arg0, _Arg1, _Arg2), _BArg0 arg0, _BArg1 arg1, _BArg2 arg2)
-        {
-            typedef _R (*F)(callback_param, _Arg0, _Arg1, _Arg2); 
-            typedef binder::CmdOptionBindParamList3<_BArg0, _BArg1, _BArg2> list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<_R, F, list_type> > obj_type;
-
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<_R, F, list_type>(fn, list_type(arg0, arg1, arg2)));
-
-            std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
-            for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex)
-            {
-                TCmdStr strTCmd = TCmdStr(stCmds[iIndex].c_str(), stCmds[iIndex].size());
-                m_stCallbackFuns[strTCmd] = pFun;
-            }
-
-            return pFun;
-        }
-
-        /**
          * 绑定函数对象(自适应)
          * 注意：默认会复制函数对象
          *
@@ -680,15 +493,20 @@ namespace copt
          * example:
          *      *.BindCmd(命令名称, 函数对象, 参数)                           // 默认类型推断是传值而非引用
          *      *.BindCmd<传入类型>(命令名称, 函数指针, 参数)
+		 *      *.BindCmd<传入类型, 参数类型>(命令名称, 函数指针, 参数)
          */
         template<typename _F>   // 绑定函数(_F: 函数对象类型)
-        std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, binder::CmdOptionBindParamList0> > 
-            BindCmd(const std::string strCmd, _F fn)
+        std::shared_ptr<binder::CmdOptionBindT<
+            typename binder::MaybeWrapMemberPointer<_F>::caller_type,
+            binder::CmdOptionBindParamList0
+        > > 
+            BindCmd(const std::string& strCmd, _F fn)
         {
             typedef binder::CmdOptionBindParamList0 list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, list_type> > obj_type;
+            typedef typename binder::MaybeWrapMemberPointer<_F>::caller_type caller_type;
+            typedef std::shared_ptr<binder::CmdOptionBindT<caller_type, list_type> > obj_type;
 
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<binder::unspecified, _F, list_type>(fn, list_type()));
+            obj_type pFun = obj_type(new binder::CmdOptionBindT<caller_type, list_type>(caller_type(fn), list_type()));
 
             std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
             for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex)
@@ -700,14 +518,18 @@ namespace copt
             return pFun;
         }
 
-        template<typename _Arg0, typename _F>  // 绑定函数(_Arg:参数[注意值的复制发生在本函数执行时], _R: 绑定函数返回值类型)
-        std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, binder::CmdOptionBindParamList1<_Arg0> > >
-            BindCmd(const std::string strCmd, _F fn, _Arg0 arg0)
+        template<typename _F, typename _Arg0>  // 绑定函数(_Arg:参数[注意值的复制发生在本函数执行时], _R: 绑定函数返回值类型)
+        std::shared_ptr<binder::CmdOptionBindT<
+            typename binder::MaybeWrapMemberPointer<_F>::caller_type,
+            binder::CmdOptionBindParamList1<_Arg0> 
+        > >
+            BindCmd(const std::string& strCmd, _F fn, _Arg0 arg0)
         {
             typedef binder::CmdOptionBindParamList1<_Arg0> list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, list_type> > obj_type;
+            typedef typename binder::MaybeWrapMemberPointer<_F>::caller_type caller_type;
+            typedef std::shared_ptr<binder::CmdOptionBindT<caller_type, list_type> > obj_type;
 
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<binder::unspecified, _F, list_type>(fn, list_type(arg0)));
+            obj_type pFun = obj_type(new binder::CmdOptionBindT<caller_type, list_type>(caller_type(fn), list_type(arg0)));
 
             std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
             for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex)
@@ -719,14 +541,18 @@ namespace copt
             return pFun;
         }
 
-        template<typename _Arg0, typename _Arg1, typename _F>  // 绑定函数(_Arg:参数[注意值的复制发生在本函数执行时], _R: 绑定函数返回值类型)
-        std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, binder::CmdOptionBindParamList2<_Arg0, _Arg1> > >
-            BindCmd(const std::string strCmd, _F fn, _Arg0 arg0, _Arg1 arg1)
+        template<typename _F, typename _Arg0, typename _Arg1>  // 绑定函数(_Arg:参数[注意值的复制发生在本函数执行时], _R: 绑定函数返回值类型)
+        std::shared_ptr<binder::CmdOptionBindT<
+            typename binder::MaybeWrapMemberPointer<_F>::caller_type,
+            binder::CmdOptionBindParamList2<_Arg0, _Arg1> 
+        > >
+            BindCmd(const std::string& strCmd, _F fn, _Arg0 arg0, _Arg1 arg1)
         {
             typedef binder::CmdOptionBindParamList2<_Arg0, _Arg1> list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, list_type> > obj_type;
+            typedef typename binder::MaybeWrapMemberPointer<_F>::caller_type caller_type;
+            typedef std::shared_ptr<binder::CmdOptionBindT<caller_type, list_type> > obj_type;
 
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<binder::unspecified, _F, list_type>(fn, list_type(arg0, arg1)));
+            obj_type pFun = obj_type(new binder::CmdOptionBindT<caller_type, list_type>(caller_type(fn), list_type(arg0, arg1)));
 
             std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
             for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex)
@@ -738,14 +564,18 @@ namespace copt
             return pFun;
         }
 
-        template<typename _Arg0, typename _Arg1, typename _Arg2, typename _F>  // 绑定函数(_Arg:参数[注意值的复制发生在本函数执行时], _R: 绑定函数返回值类型)
-        std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, binder::CmdOptionBindParamList3<_Arg0, _Arg1, _Arg2> > >
-            BindCmd(const std::string strCmd, _F fn, _Arg0 arg0, _Arg1 arg1, _Arg2 arg2)
+        template<typename _F, typename _Arg0, typename _Arg1, typename _Arg2>  // 绑定函数(_Arg:参数[注意值的复制发生在本函数执行时], _R: 绑定函数返回值类型)
+        std::shared_ptr<binder::CmdOptionBindT<
+            typename binder::MaybeWrapMemberPointer<_F>::caller_type,
+            binder::CmdOptionBindParamList3<_Arg0, _Arg1, _Arg2> 
+        > >
+            BindCmd(const std::string& strCmd, _F fn, _Arg0 arg0, _Arg1 arg1, _Arg2 arg2)
         {
             typedef binder::CmdOptionBindParamList3<_Arg0, _Arg1, _Arg2> list_type;
-            typedef std::shared_ptr<binder::CmdOptionBindT<binder::unspecified, _F, list_type> > obj_type;
+            typedef typename binder::MaybeWrapMemberPointer<_F>::caller_type caller_type;
+            typedef std::shared_ptr<binder::CmdOptionBindT<caller_type, list_type> > obj_type;
 
-            obj_type pFun = obj_type(new binder::CmdOptionBindT<binder::unspecified, _F, list_type>(fn, list_type(arg0, arg1, arg2)));
+            obj_type pFun = obj_type(new binder::CmdOptionBindT<caller_type, list_type>(caller_type(fn), list_type(arg0, arg1, arg2)));
 
             std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
             for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++ iIndex)
@@ -757,6 +587,28 @@ namespace copt
             return pFun;
         }
 
+        template<typename _F, typename _Arg0, typename _Arg1, typename _Arg2, typename _Arg3>  // 绑定函数(_Arg:参数[注意值的复制发生在本函数执行时], _R: 绑定函数返回值类型)
+        std::shared_ptr<binder::CmdOptionBindT<
+            typename binder::MaybeWrapMemberPointer<_F>::caller_type,
+            binder::CmdOptionBindParamList4<_Arg0, _Arg1, _Arg2, _Arg3>
+        > >
+        BindCmd(const std::string& strCmd, _F fn, _Arg0 arg0, _Arg1 arg1, _Arg2 arg2, _Arg3 arg3)
+        {
+            typedef binder::CmdOptionBindParamList4<_Arg0, _Arg1, _Arg2, _Arg3> list_type;
+            typedef typename binder::MaybeWrapMemberPointer<_F>::caller_type caller_type;
+            typedef std::shared_ptr<binder::CmdOptionBindT<caller_type, list_type> > obj_type;
+
+            obj_type pFun = obj_type(new binder::CmdOptionBindT<caller_type, list_type>(caller_type(fn), list_type(arg0, arg1, arg2, arg3)));
+
+            std::vector<std::string> stCmds = splitCmd(strCmd.c_str());
+            for (std::vector<std::string>::size_type iIndex = 0; iIndex < stCmds.size(); ++iIndex)
+            {
+                TCmdStr strTCmd = TCmdStr(stCmds[iIndex].c_str(), stCmds[iIndex].size());
+                m_stCallbackFuns[strTCmd] = pFun;
+            }
+
+            return pFun;
+        }
 
         /**
          * 绑定指令(通用)
