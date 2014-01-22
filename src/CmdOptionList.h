@@ -117,11 +117,9 @@ namespace copt
         value_type Get(std::string strKey);
 
         // 根据下标获取选项指针，如果不存在会出现运行时错误
-        value_type Get(int iIndex) const;
         value_type Get(size_type iIndex) const;
 
         // 操作符重载，功能和上面一样
-        value_type operator[](int iIndex) const;
         value_type operator[](size_type iIndex) const;
 
         // 获取参数数量
