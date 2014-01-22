@@ -100,7 +100,7 @@ int main() {
     co->BindCmd("-bt2, --bind_class_func_param2", &foo::print_t2, pf, 1011);
     co->BindCmd("-bt3, --bind_class_func_param3", &foo::print_t3, pf, 1013, 10.13);
     // 无参数类函数绑定
-    co->BindCmd("-bt, --bind_class_func", &foo::print, &f)->SetHelpMsg("-bt, --bind_class_func    无参数类绑定");
+    co->BindCmd("-bt, --bind_class_func", &foo::print, std::ref(f))->SetHelpMsg("-bt, --bind_class_func    无参数类绑定");
     // 带参数普通函数绑定(自动类型推断)
     cco->BindCmd("-bf1, --bind_func_param1", (void (*)(copt::callback_param, std::string*))print, &str)->SetHelpMsg("-bf1, --bind_func_param    带参数函数绑定");
 

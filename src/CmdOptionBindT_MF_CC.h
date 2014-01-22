@@ -38,10 +38,22 @@ namespace copt
                 (arg0->*m_fMemFunc)(args);
             }
 
+            template<typename _TCBP>
+            void operator()(_TCBP& args, _T& arg0)
+            {
+                (arg0.*m_fMemFunc)(args);
+            }
+
             template<typename _TCBP, typename _Arg1>
             void operator()(_TCBP& args, _T* arg0, _Arg1& arg1)
             {
                 (arg0->*m_fMemFunc)(args, arg1);
+            }
+
+            template<typename _TCBP, typename _Arg1>
+            void operator()(_TCBP& args, _T& arg0, _Arg1& arg1)
+            {
+                (arg0.*m_fMemFunc)(args, arg1);
             }
 
             template<typename _TCBP, typename _Arg1, typename _Arg2>
@@ -50,10 +62,22 @@ namespace copt
                 (arg0->*m_fMemFunc)(args, arg1, arg2);
             }
 
+            template<typename _TCBP, typename _Arg1, typename _Arg2>
+            void operator()(_TCBP& args, _T& arg0, _Arg1& arg1, _Arg2& arg2)
+            {
+                (arg0.*m_fMemFunc)(args, arg1, arg2);
+            }
+
             template<typename _TCBP, typename _Arg1, typename _Arg2, typename _Arg3>
             void operator()(_TCBP& args, _T* arg0, _Arg1& arg1, _Arg2& arg2, _Arg3& arg3)
             {
                 (arg0->*m_fMemFunc)(args, arg1, arg2, arg3);
+            }
+
+            template<typename _TCBP, typename _Arg1, typename _Arg2, typename _Arg3>
+            void operator()(_TCBP& args, _T& arg0, _Arg1& arg1, _Arg2& arg2, _Arg3& arg3)
+            {
+                (arg0.*m_fMemFunc)(args, arg1, arg2, arg3);
             }
 
         };
