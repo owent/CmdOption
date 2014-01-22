@@ -10,6 +10,9 @@
 // 命令忽略大小写
 #include "CaseIgnoreBind.h"
 
+class foo;
+foo* g_test = NULL;
+
 class foo {
 public:
     void print_t(copt::callback_param par, std::string& str)
@@ -29,6 +32,8 @@ public:
         {
             puts(par[i]->AsString());
         }
+
+        g_test = this;
     }
 
     void print_t2(copt::callback_param par, int i)
@@ -119,6 +124,7 @@ int main() {
     // 单指令启动测试
     co->Start("-c lala def -bf1 par1 par2 par3 -bf2 -bf3 fp1");
     co->Start("-bt btpar1 \"test end of line\\r\\n\tanother line\"-bt1 with one param --bind_class_func_param2 p1 p2 p3 -bt3 p4");
+    printf("成员函数绑定传入对象引用包装测试: %s\n", (g_test == &f) ? "通过" : "失败！！！！！！！！！！！");
 
     // 多指令启动测试
     const char* strCmds[] = {"path", "par1", "par2", "wo", "le", "ge", "cha"};

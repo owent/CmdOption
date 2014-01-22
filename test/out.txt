@@ -2,18 +2,19 @@ do nothing! - free func without parameter
 
 sizeof(short) => 2
 sizeof(int) => 4
-sizeof(long) => 8
+sizeof(long) => 4
 do nothing! - free func without parameter
 
 bt func:
 btpar1
-test end of line
+test end of line
 	another line
 sizeof(float) => 4
 sizeof(double) => 8
-sizeof(long double) => 16
+sizeof(long double) => 8
 Mem Fun B2 Params Num: 3, i => 1011
 Mem Fun B3 Params Num: 1, i => 1013, d => 10.130000
+³ÉÔ±º¯Êý°ó¶¨´«Èë¶ÔÏóÒýÓÃ°ü×°²âÊÔ: Í¨¹ý
 do nothing! - free func without parameter
 
 100
@@ -23,36 +24,36 @@ do nothing! - free func without parameter
 Hello World!
 do nothing! - free func without parameter
 
-ç»‘å®šæµ‹è¯•å®Œæ¯•
+°ó¶¨²âÊÔÍê±Ï
 
 CMDS:  --bind_class_func; --bind_class_func_param; --bind_class_func_param2; --bind_class_func_param3; --child; -bt; -bt1; -bt2; -bt3; -c; @OnDefault; @OnError; cha; de; ge; le; wo;
 do nothing! - free func without parameter
 
 Help:
--bt, --bind_class_func    æ— å‚æ•°ç±»ç»‘å®š
--bt1, --bind_class_func_param    å¸¦å‚æ•°ç±»ç»‘å®š
--c, --child    -bf, --bind_func    æ— å‚æ•°å‡½æ•°ç»‘å®š
--c, --child    -bf1, --bind_func_param    å¸¦å‚æ•°å‡½æ•°ç»‘å®š
--c, --child    
--c, --child    
-wo, le, ge, cha, de   å¤æ‚æŒ‡ä»¤ç»‘å®š
-h, help      å¸®åŠ©ä¿¡æ¯
-é»˜è®¤å¸®åŠ©å‡½æ•°æµ‹è¯•å®Œæˆ
+-bt, --bind_class_func    ÎÞ²ÎÊýÀà°ó¶¨
+-bt1, --bind_class_func_param    ´ø²ÎÊýÀà°ó¶¨
+-c, --child    -bf, --bind_func    ÎÞ²ÎÊýº¯Êý°ó¶¨
+-c, --child    -bf1, --bind_func_param    ´ø²ÎÊýº¯Êý°ó¶¨
+-c, --child    
+-c, --child    
+wo, le, ge, cha, de   ¸´ÔÓÖ¸Áî°ó¶¨
+h, help      °ïÖúÐÅÏ¢
+Ä¬ÈÏ°ïÖúº¯Êý²âÊÔÍê³É
 
-å»¶è¿Ÿåˆå§‹åŒ–å­ç»‘å®š
+ÑÓ³Ù³õÊ¼»¯×Ó°ó¶¨
 Delay Init Params Num: 5
 Delay Init Child Option With "delay_print".
-å»¶è¿Ÿåˆå§‹åŒ–å­ç»‘å®š æµ‹è¯•å®Œæˆ
+ÑÓ³Ù³õÊ¼»¯×Ó°ó¶¨ ²âÊÔÍê³É
 
-ç»‘å®šå‡½æ•°å¯¹è±¡
+°ó¶¨º¯Êý¶ÔÏó
 On Bind Obj Params: p1 p2 p3 m => 105
 On Bind Obj1 Params: test m => 205, a => 206
 On Bind Obj2 Params: m => 305, a => 306, b => 30.600000
 On Bind Obj3 Params: m => 405, a => 406, b => 40.600000, c => 1
-ç»‘å®šå‡½æ•°å¯¹è±¡ æµ‹è¯•å®Œæˆ
+°ó¶¨º¯Êý¶ÔÏó ²âÊÔÍê³É
 
 Help:
-Help (CI):
+Help (CI):
 Cmd Ignore Case printdi
 ci: Free Fun B3 Params Num: 2, i => 105, d => 3.500000
 ci: do nothing! - free func without parameter
