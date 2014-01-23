@@ -24,7 +24,9 @@
 // ============================================================
 
 // VC12.0 SP1以上分支判断
-#if defined(_MSC_VER) && (_MSC_VER >= 1800 && defined(_HAS_CPP0X) && _HAS_CPP0X)
+#if defined(__cplusplus) && __cplusplus >= 201103L
+    #define COPT_ENABLE_VARIADIC_TEMPLATE 1
+#elif defined(_MSC_VER) && (_MSC_VER >= 1800 && defined(_HAS_CPP0X) && _HAS_CPP0X)
     #define COPT_ENABLE_VARIADIC_TEMPLATE 1
 #elif defined(__clang__) && __clang_major__ >= 3 && (__cplusplus >= 201103L || !defined(_LIBCPP_HAS_NO_VARIADICS))
     #define COPT_ENABLE_VARIADIC_TEMPLATE 1
@@ -34,5 +36,4 @@
         #define COPT_ENABLE_VARIADIC_TEMPLATE 1
     #endif
 #endif
-
 #endif

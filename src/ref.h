@@ -35,7 +35,9 @@
 */
 
 // VC9.0 SP1以上分支判断
-#if defined(_MSC_VER) && (_MSC_VER == 1500 && defined (_HAS_TR1)) || (_MSC_VER > 1500 && defined(_HAS_CPP0X) && _HAS_CPP0X)
+#if defined(__cplusplus) && __cplusplus >= 201103L
+#include <functional>
+#elif defined(_MSC_VER) && (_MSC_VER == 1500 && defined (_HAS_TR1)) || (_MSC_VER > 1500 && defined(_HAS_CPP0X) && _HAS_CPP0X)
 // 采用VC std::tr1库
 #include <functional>
 #elif defined(__clang__) && __clang_major__ >= 3

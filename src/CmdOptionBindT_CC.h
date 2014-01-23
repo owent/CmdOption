@@ -5,6 +5,8 @@
 # pragma once
 #endif
 
+#include "std_check.h"
+
 /*
  * CmdOptionBindT_CC.h
  *
@@ -21,7 +23,6 @@ namespace copt
         // ============================
         // ===       º¯Êý°ó¶¨       ===
         // ============================
-
         template<typename _TF>
         class CmdOptionBindCCCaller
         {
@@ -31,6 +32,14 @@ namespace copt
         public:
             CmdOptionBindCCCaller(_TF f) : m_fFunc(f){}
 
+#if defined(COPT_ENABLE_VARIADIC_TEMPLATE)
+            template<typename _TCBP, typename... _Args>
+            void operator()(_TCBP& param, _Args&... args)
+            {
+                m_fFunc(param, args...);
+            }
+
+#else
             template<typename _TCBP>
             void operator()(_TCBP& args)
             {
@@ -54,6 +63,7 @@ namespace copt
             {
                 m_fFunc(args, arg0, arg1, arg2);
             }
+#endif
 
         };
     }

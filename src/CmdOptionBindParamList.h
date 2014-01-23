@@ -17,6 +17,10 @@
 #include "CmdOptionBindT_CC.h"
 #include "CmdOptionBindT_MF_CC.h"
 
+#if defined(COPT_ENABLE_VARIADIC_TEMPLATE)
+#include "tuple.h"
+#endif
+
 namespace copt
 {
     namespace binder {
@@ -59,6 +63,51 @@ namespace copt
         // ============================
         // ===       参数列表       ===
         // ============================
+#if defined(COPT_ENABLE_VARIADIC_TEMPLATE)
+        template<typename... _Args>
+        class CmdOptionBindParamList
+        {
+        private:
+            /**
+            * 用于创建存储对象索引和解包索引[0, 1, 2, ..., sizeof...(_Args) - 1]
+            */
+            template<int... _Index>
+            struct IndexArgsVarList{};
+
+            template<std::size_t N, int... _Index>
+            struct BuildArgsIndex :
+                BuildArgsIndex<N - 1, _Index..., sizeof...(_Index)>
+            {
+            };
+
+            template<int... _Index>
+            struct BuildArgsIndex<0, _Index...>
+            {
+                typedef IndexArgsVarList<_Index...> type;
+            };
+
+        private:
+            template<class _F, int... _Indexes>
+            void _DoCall(_F& f, callback_param args, IndexArgsVarList<_Indexes...>)
+            {
+                f(args, std::get<_Indexes>(m_stArgs)...);
+            }
+
+        private:
+            std::tuple<_Args...> m_stArgs;
+
+        public:
+            CmdOptionBindParamList(_Args... args) : m_stArgs(args...){}
+
+            template<class _F>
+            void operator()(_F& f, callback_param args, int)
+            {
+                typedef typename BuildArgsIndex<sizeof...(_Args)>::type _index_type;
+                _DoCall(f, args, _index_type());
+            }
+        };
+
+#else
 
         class CmdOptionBindParamList0
         {
@@ -142,6 +191,8 @@ namespace copt
                 f(args, m_tArg0, m_tArg1, m_tArg2, m_tArg3);
             }
         };
+
+#endif
 
     }
 }

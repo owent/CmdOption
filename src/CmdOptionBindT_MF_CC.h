@@ -5,6 +5,8 @@
 # pragma once
 #endif
 
+#include "std_check.h"
+
 /*
  * CmdOptionBindT_MF_CC.h
  *
@@ -18,7 +20,6 @@ namespace copt
 {
     // 绑定器集合
     namespace binder {
-
         // ============================
         // ===        类绑定        ===
         // ============================
@@ -31,6 +32,20 @@ namespace copt
 
         public:
             CmdOptionBindMFCCCaller(_F f) : m_fMemFunc(f){}
+
+#if defined(COPT_ENABLE_VARIADIC_TEMPLATE)
+            template<typename _TCBP, typename... _Args>
+            void operator()(_TCBP& param, _T* arg0, _Args&... args)
+            {
+                (arg0->*m_fMemFunc)(param, args...);
+            }
+
+            template<typename _TCBP, typename... _Args>
+            void operator()(_TCBP& param, _T& arg0, _Args&... args)
+            {
+                (arg0.*m_fMemFunc)(param, args...);
+            }
+#else
 
             template<typename _TCBP>
             void operator()(_TCBP& args, _T* arg0)
@@ -79,6 +94,7 @@ namespace copt
             {
                 (arg0.*m_fMemFunc)(args, arg1, arg2, arg3);
             }
+#endif
 
         };
     }
