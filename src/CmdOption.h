@@ -62,6 +62,7 @@ namespace copt
     class CmdOptionBind: public binder::CmdOptionBindBase
     {
     protected:
+        typedef unsigned char uc_t;
         static short m_strMapValue[256]; // 记录不同字符的映射关系
         static char m_strTransValue[256]; // 记录特殊转义字符
 
@@ -123,12 +124,12 @@ namespace copt
             char cFlag;  // 字符串开闭字符
 
             // 去除分隔符前缀
-            while (*strBegin && (m_strMapValue[(int)*strBegin] & SPLITCHAR))
+            while (*strBegin && (m_strMapValue[(uc_t)*strBegin] & SPLITCHAR))
                 ++ strBegin;
 
-            while (*strBegin && !(m_strMapValue[(int)*strBegin] & SPLITCHAR))
+            while (*strBegin && !(m_strMapValue[(uc_t)*strBegin] & SPLITCHAR))
             {
-                if (!(m_strMapValue[(int)*strBegin] & STRINGSYM))
+                if (!(m_strMapValue[(uc_t)*strBegin] & STRINGSYM))
                 {
                     strVal += *strBegin;
                     ++ strBegin;
@@ -141,12 +142,12 @@ namespace copt
                     while (*strBegin && *strBegin != cFlag)
                     {
                         char cCurByte = *strBegin;
-                        if (m_strMapValue[(int)*strBegin] & TRANSLATE)
+                        if (m_strMapValue[(uc_t)*strBegin] & TRANSLATE)
                         {
                             if (*(strBegin + 1))
                             {
                                 ++ strBegin;
-                                cCurByte = m_strTransValue[(int)*strBegin];
+                                cCurByte = m_strTransValue[(uc_t)*strBegin];
                             }
                         }
 
@@ -160,7 +161,7 @@ namespace copt
             }
 
             // 去除分隔符后缀
-            while (*strBegin && (m_strMapValue[(int)*strBegin] & SPLITCHAR))
+            while (*strBegin && (m_strMapValue[(uc_t)*strBegin] & SPLITCHAR))
                 ++ strBegin;
             return strBegin;
         }
@@ -177,11 +178,11 @@ namespace copt
             {
                 std::string strCmd;
                 // 去除命令分隔符前缀
-                while ((*pBegin) && (m_strMapValue[(int)*pBegin] & CMDSPLIT))
+                while ((*pBegin) && (m_strMapValue[(uc_t)*pBegin] & CMDSPLIT))
                     ++ pBegin;
 
                 // 分离命令
-                while ((*pBegin) && !(m_strMapValue[(int)*pBegin] & CMDSPLIT))
+                while ((*pBegin) && !(m_strMapValue[(uc_t)*pBegin] & CMDSPLIT))
                 {
                     strCmd.push_back(*pBegin);
                     ++ pBegin;
@@ -210,35 +211,35 @@ namespace copt
         CmdOptionBind()
         {
             // 如果已初始化则跳过
-            if (m_strMapValue[(int)' '] & SPLITCHAR)
+            if (m_strMapValue[(uc_t)' '] & SPLITCHAR)
                 return;
 
             // 分隔符
-            m_strMapValue[(int)' '] = m_strMapValue[(int)'\t'] =
-                m_strMapValue[(int)'\r'] = m_strMapValue[(int)'\n'] = SPLITCHAR;
+            m_strMapValue[(uc_t)' '] = m_strMapValue[(uc_t)'\t'] =
+                m_strMapValue[(uc_t)'\r'] = m_strMapValue[(uc_t)'\n'] = SPLITCHAR;
             // 字符串开闭符
-            m_strMapValue[(int)'\''] = m_strMapValue[(int)'\"'] = STRINGSYM;
+            m_strMapValue[(uc_t)'\''] = m_strMapValue[(uc_t)'\"'] = STRINGSYM;
             // 转义标记符
-            m_strMapValue[(int)'\\'] = TRANSLATE;
+            m_strMapValue[(uc_t)'\\'] = TRANSLATE;
             // 指令分隔符
-            m_strMapValue[(int)' '] |= CMDSPLIT;
-            m_strMapValue[(int)','] = m_strMapValue[(int)';'] = CMDSPLIT;
+            m_strMapValue[(uc_t)' '] |= CMDSPLIT;
+            m_strMapValue[(uc_t)','] = m_strMapValue[(uc_t)';'] = CMDSPLIT;
 
             // 转义字符设置
             for (int i = 0; i < 256; ++ i)
                 m_strTransValue[i] = i;
 
-            m_strTransValue[(int)'0'] = '\0';
-            m_strTransValue[(int)'a'] = '\a';
-            m_strTransValue[(int)'b'] = '\b';
-            m_strTransValue[(int)'f'] = '\f';
-            m_strTransValue[(int)'r'] = '\r';
-            m_strTransValue[(int)'n'] = '\n';
-            m_strTransValue[(int)'t'] = '\t';
-            m_strTransValue[(int)'v'] = '\v';
-            m_strTransValue[(int)'\\'] = '\\';
-            m_strTransValue[(int)'\''] = '\'';
-            m_strTransValue[(int)'\"'] = '\"';
+            m_strTransValue[(uc_t)'0'] = '\0';
+            m_strTransValue[(uc_t)'a'] = '\a';
+            m_strTransValue[(uc_t)'b'] = '\b';
+            m_strTransValue[(uc_t)'f'] = '\f';
+            m_strTransValue[(uc_t)'r'] = '\r';
+            m_strTransValue[(uc_t)'n'] = '\n';
+            m_strTransValue[(uc_t)'t'] = '\t';
+            m_strTransValue[(uc_t)'v'] = '\v';
+            m_strTransValue[(uc_t)'\\'] = '\\';
+            m_strTransValue[(uc_t)'\''] = '\'';
+            m_strTransValue[(uc_t)'\"'] = '\"';
         }
 
     public:
