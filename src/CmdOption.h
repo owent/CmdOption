@@ -1,4 +1,4 @@
-﻿#ifndef _CMDOPTION_H_
+#ifndef _CMDOPTION_H_
 #define _CMDOPTION_H_
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
@@ -8,9 +8,9 @@
 /**
  * CmdOptionBind<TCmdStr>.h
  * 
- *  Version: 1.5.2
+ *  Version: 1.5.3
  *  Created on: 2011-12-29
- *  Last edit : 2014-01-23
+ *  Last edit : 2014-04-01
  *      Author: OWenT
  *
  * 应用程序命令处理
@@ -320,6 +320,7 @@ namespace copt
                             runCmd(strCmd, stCmdArgs);
                             stCmdArgs.Clear();
                             stCmdArgs.LoadCmdArray(stArgs.GetCmdArray());
+                            stCmdArgs.SetExtParam(stArgs.GetExtParam());
                         }
 
                         // 追加所有参数，执行单指令
