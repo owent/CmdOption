@@ -11,7 +11,7 @@
  *  Created on: 2011-12-29
  *      Author: OWenT
  *
- * 应用程序命令处理
+ * 搴旂敤绋嬪簭鍛戒护澶勭悊
  *
  */
 
@@ -45,9 +45,11 @@ namespace copt
             return string2any<_Tt>(m_strData.c_str());
         }
 
-        // 获取存储对象的字符串
+        // 鑾峰彇瀛樺偍瀵硅薄鐨勫瓧绗︿覆
         const std::string& AsCppString() const;
 
+        bool AsBool() const;
+        
         char AsChar() const;
 
         short AsShort() const;
@@ -89,6 +91,9 @@ namespace copt
         int64_t AsInt64() const;
 
         uint64_t AsUInt64() const;
+        
+        // ============ logic operation ============
+        bool AsLogicBool() const;
     };
 }
 
