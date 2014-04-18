@@ -8,9 +8,9 @@
 /**
  * CmdOptionBind<TCmdStr>.h
  * 
- *  Version: 1.5.3
+ *  Version: 1.5.4
  *  Created on: 2011-12-29
- *  Last edit : 2014-04-01
+ *  Last edit : 2014-04-18
  *      Author: OWenT
  *
  * 应用程序命令处理
