@@ -4,7 +4,7 @@
 *  Created on: 2011-12-29
 *      Author: OWenT
 *
-* 应用程序命令处理
+* 搴旂敤绋嬪簭鍛戒护澶勭悊
 *
 */
 
@@ -20,6 +20,11 @@ namespace copt
     const std::string& CmdOptionValue::AsCppString() const
     {
         return m_strData;
+    }
+    
+    bool CmdOptionValue::AsBool() const
+    {
+        return As<bool>();
     }
 
     char CmdOptionValue::AsChar() const
@@ -126,6 +131,30 @@ namespace copt
     uint64_t CmdOptionValue::AsUInt64() const
     {
         return As<uint64_t>();
+    }
+    
+    bool CmdOptionValue::AsLogicBool() const
+    {
+        std::string strLowercase = m_strData;
+        std::transform(strLowercase.begin(), strLowercase.end(), strLowercase.begin(), ::tolower);
+
+        if (strLowercase.empty())
+        {
+            return false;
+        }
+
+        if ("no" == strLowercase || "false" == strLowercase ||
+            "disabled" == strLowercase  || "disable" == strLowercase)
+        {
+            return false;
+        }
+
+        if (0 == AsInt())
+        {
+            return false;
+        }
+
+        return true;
     }
 }
 
