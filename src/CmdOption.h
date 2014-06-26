@@ -23,6 +23,7 @@
 
 #include <exception>
 #include <set>
+#include <cstdio>
 
 #include <vector>
 #include <map>
