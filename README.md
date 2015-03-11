@@ -2,7 +2,8 @@ CmdOption
 =========
 LICENSE UNDER MIT LICENSE
 
-持续集成状态（GCC & Clang） [![Build Status](https://travis-ci.org/owt5008137/CmdOption.svg?branch=master)](https://travis-ci.org/owt5008137/CmdOption)
+**当前构建状态（GCC & Clang）** [![Build Status](https://travis-ci.org/owt5008137/CmdOption.svg?branch=master)](https://travis-ci.org/owt5008137/CmdOption)
+
 
 命令函数绑定器
 
