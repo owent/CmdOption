@@ -2,6 +2,8 @@ CmdOption
 =========
 LICENSE UNDER MIT LICENSE
 
+[![Build Status](https://travis-ci.org/owt5008137/CmdOption.svg?branch=master)](https://travis-ci.org/owt5008137/CmdOption)
+
 命令函数绑定器
 
 需要安装cmake 2.8.6 及以上
