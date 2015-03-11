@@ -8,7 +8,7 @@
 *
 */
 
-
+#include <algorithm>
 #include "CmdOptionValue.h"
 
 namespace copt
