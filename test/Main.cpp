@@ -1,7 +1,8 @@
 #include <iostream>
-#include <functional>
 #include <algorithm>
 #include <cstdio>
+#include "std/ref.h"
+
 #include "CmdOption.h"
 
 // 高级用法示例源码
