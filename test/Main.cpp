@@ -1,4 +1,6 @@
-﻿#include <iostream>
+#include <iostream>
+#include <functional>
+#include <algorithm>
 #include <cstdio>
 #include "CmdOption.h"
 
