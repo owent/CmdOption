@@ -2,7 +2,9 @@ CmdOption
 =========
 LICENSE UNDER MIT LICENSE
 
-**当前构建状态（GCC & Clang）** [![Build Status](https://travis-ci.org/owt5008137/CmdOption.svg?branch=master)](https://travis-ci.org/owt5008137/CmdOption)
+构建环境     | Linux (GCC & Clang) | Windows |
+-------------|---------------------|---------|
+当前构建状态| [![Build Status](https://travis-ci.org/owt5008137/CmdOption.svg?branch=master)](https://travis-ci.org/owt5008137/CmdOption) | [![Build status](https://ci.appveyor.com/api/projects/status/o6ip3gq7tlfhmk5q?svg=true)](https://ci.appveyor.com/project/owt5008137/cmdoption) |
 
 
 命令函数绑定器
